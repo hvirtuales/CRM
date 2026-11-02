@@ -20,12 +20,15 @@ class AuthService
         return password_hash($plain, defined('PASSWORD_ARGON2ID') ? PASSWORD_ARGON2ID : PASSWORD_DEFAULT);
     }
 
-    /** Hash ficticio para igualar tiempos cuando el usuario no existe (evita enumeración por tiempo). */
+    /**
+     * Hash ficticio PRECALCULADO (mismos parámetros Argon2id por defecto) para que un correo
+     * inexistente cueste exactamente un password_verify, igual que uno existente.
+     */
+    private const DUMMY_HASH = '$argon2id$v=19$m=65536,t=4,p=1$blY2eVRhTkxEakxaZ3czZg$4APdfSes4jZDP+N/PuGMDoJrkrRNBPPwTLunHQh0jd4';
+
     private static function dummyHash(): string
     {
-        static $hash = null;
-
-        return $hash ??= self::hashPassword(bin2hex(random_bytes(16)));
+        return defined('PASSWORD_ARGON2ID') ? self::DUMMY_HASH : '$2y$10$usesomesillystringfore7hnbRJHxXVLeakoG8K30oukPsA.ztMG';
     }
 
     /**
@@ -117,11 +120,35 @@ class AuthService
         return db_connect()->table('memberships')->where('user_id', $userId)->where('scope', 'platform')->where('status', 'active')->countAllResults() > 0;
     }
 
+    public const MAX_MFA_FAILURES = 10;
+
+    /**
+     * Verifica el segundo factor: rechaza códigos ya usados (paso ≤ último aceptado) y cuenta fallos
+     * consecutivos. Al llegar a MAX_MFA_FAILURES se invalidan todas las sesiones del usuario
+     * (debe volver a ingresar con contraseña) y se audita.
+     */
     public function verifyMfa(array $user, string $code): bool
     {
+        $db     = db_connect();
         $secret = $this->decryptSecret($user['mfa_secret'] ?? null);
+        $step   = $secret !== null ? Totp::matchStep($secret, $code) : null;
+        $last   = $db->table('users')->select('mfa_last_step, mfa_failures, session_version')->where('id', $user['id'])->get()->getRowArray();
 
-        return $secret !== null && Totp::verify($secret, $code);
+        if ($step !== null && ($last['mfa_last_step'] === null || $step > (int) $last['mfa_last_step'])) {
+            $db->table('users')->where('id', $user['id'])->update(['mfa_last_step' => $step, 'mfa_failures' => 0]);
+
+            return true;
+        }
+
+        $failures = (int) $last['mfa_failures'] + 1;
+        $update   = ['mfa_failures' => $failures];
+        if ($failures >= self::MAX_MFA_FAILURES) {
+            $update = ['mfa_failures' => 0, 'session_version' => (int) $last['session_version'] + 1];
+            Services::audit()->log('auth.mfa_lockout', 'user', (int) $user['id']);
+        }
+        $db->table('users')->where('id', $user['id'])->update($update);
+
+        return false;
     }
 
     public function encryptSecret(string $secret): string

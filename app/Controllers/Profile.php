@@ -34,6 +34,9 @@ class Profile extends BaseController
     public function changePassword()
     {
         $user    = Services::context()->user();
+        if (! Services::throttler()->check('pwd-' . $user['id'], 5, MINUTE)) {
+            return redirect()->back()->with('error', lang('Core.tooManyRequests'));
+        }
         $current = (string) $this->request->getPost('current_password');
         $new     = (string) $this->request->getPost('new_password');
         $confirm = (string) $this->request->getPost('new_password_confirm');
@@ -81,12 +84,17 @@ class Profile extends BaseController
     {
         $user   = Services::context()->user();
         $secret = session('mfa_pending_secret');
-        if (! is_string($secret) || ! Totp::verify($secret, (string) $this->request->getPost('code'))) {
+        if (! Services::throttler()->check('mfa-on-' . $user['id'], 5, MINUTE)) {
+            return redirect()->back()->with('error', lang('Core.tooManyRequests'));
+        }
+        $step = is_string($secret) ? Totp::matchStep($secret, (string) $this->request->getPost('code')) : null;
+        if ($step === null) {
             return redirect()->back()->with('error', lang('Auth.mfaInvalid'));
         }
 
         db_connect()->table('users')->where('id', $user['id'])->update([
-            'mfa_secret' => Services::auth()->encryptSecret($secret), 'mfa_enabled' => 1, 'updated_at' => date('Y-m-d H:i:s'),
+            'mfa_secret' => Services::auth()->encryptSecret($secret), 'mfa_enabled' => 1, 'mfa_last_step' => $step,
+            'mfa_failures' => 0, 'updated_at' => date('Y-m-d H:i:s'),
         ]);
         session()->remove('mfa_pending_secret');
         session()->regenerate(true);
@@ -102,6 +110,9 @@ class Profile extends BaseController
     public function disableMfa()
     {
         $user = Services::context()->user();
+        if (! Services::throttler()->check('mfa-off-' . $user['id'], 5, MINUTE)) {
+            return redirect()->back()->with('error', lang('Core.tooManyRequests'));
+        }
         if (Services::auth()->hasPlatformMembership((int) $user['id']) && config('Rbac')->requireMfaForPlatform) {
             return redirect()->back()->with('error', lang('Auth.mfaMandatory'));
         }

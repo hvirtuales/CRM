@@ -48,7 +48,7 @@ class ProvisioningService
 
         Services::audit()->log('tenant.created', 'tenant', $tenantId, ['name' => $data['name']], null, $tenantId);
 
-        return Result::success(['id' => $tenantId, 'temp_password' => $owner->data['temp_password']]);
+        return Result::success(['id' => $tenantId, 'invitation_sent' => $owner->data['sent']]);
     }
 
     /**
@@ -59,7 +59,9 @@ class ProvisioningService
         $errors = $this->validateOrg($data, 'companies');
         $errors += $this->validateOwner($data);
         $planId = (int) ($data['plan_id'] ?? 0);
-        if ($planId > 0 && ! $this->planSellable($planId, $tenantId !== null)) {
+        if ($tenantId !== null && $planId <= 0) {
+            $errors['plan_id'] = lang('Core.validation.planRequired'); // un distribuidor siempre vende un plan
+        } elseif ($planId > 0 && ! $this->planSellable($planId, $tenantId !== null)) {
             $errors['plan_id'] = lang('Core.planInvalid');
         }
         $tz = (string) ($data['timezone'] ?? 'America/Bogota');
@@ -97,7 +99,7 @@ class ProvisioningService
             return $owner;
         }
         if ($planId > 0) {
-            $sub = Services::subscriptions()->assignPlan($companyId, $planId, $tenantId, $actorId);
+            $sub = Services::subscriptions()->assignPlan($companyId, $planId, $tenantId, $actorId, $tenantId !== null);
             if (! $sub->ok) {
                 $db->transRollback();
 
@@ -108,7 +110,7 @@ class ProvisioningService
 
         Services::audit()->log('company.created', 'company', $companyId, ['name' => $data['name'], 'tenant_id' => $tenantId], $companyId, $tenantId);
 
-        return Result::success(['id' => $companyId, 'temp_password' => $owner->data['temp_password']]);
+        return Result::success(['id' => $companyId, 'invitation_sent' => $owner->data['sent']]);
     }
 
     /** Traslado entre distribuidores: privilegiado, justificado y con historial. */

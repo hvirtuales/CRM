@@ -4,12 +4,12 @@
 <?php
 $canCreate = auth_can('tenant.companies.create'); $canPlan = auth_can('tenant.subscriptions.edit');
 $errors = session('errors') ?? []; $isNew = service('request')->getGet('new') === '1';
-$planOptions = ['' => lang('Platform.noPlanYet')];
+$planOptions = ['' => lang('Core.choose')]; // el distribuidor siempre vende un plan
 foreach ($plans as $p) { $planOptions[$p['id']] = $p['name'] . ' · ' . money($p['price'], $p['currency']); }
 ?>
 <?= view('partials/page_header', ['title' => lang('Nav.companies'), 'description' => lang('Tenant.companiesHelp'),
     'actions' => $canCreate ? '<button type="button" class="btn btn-primary" data-open-dialog="dlg-new">' . icon('plus') . esc(lang('Tenant.newCompany')) . '</button>' : '']) ?>
-<?= view('partials/temp_password') ?>
+<?= view('partials/invitation_notice') ?>
 <form method="get" class="mb-3 flex flex-wrap items-center gap-2">
   <div class="relative w-full max-w-sm"><?= icon('search', 16, 'pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-soft') ?><input class="input pl-9" type="search" name="q" value="<?= esc($q, 'attr') ?>" placeholder="<?= esc(lang('Platform.searchCompanies'), 'attr') ?>" aria-label="<?= esc(lang('Core.search'), 'attr') ?>"></div>
 </form>

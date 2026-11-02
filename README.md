@@ -22,6 +22,11 @@ php spark hv:install            # migra núcleo + componentes, siembra permisos/
 php spark hv:create-owner admin@empresa.com "Nombre Apellido"   # pide la contraseña
 ```
 
+El alta de usuarios es por **invitación al correo** (configure `email.fromEmail` y SMTP en `.env`); nadie ve contraseñas ajenas.
+
+```bash
+```
+
 Desarrollo con datos de demostración (se niega a correr en producción):
 
 ```bash
@@ -44,7 +49,7 @@ Tarea diaria (ciclo de vida de suscripciones):
 vendor/bin/phpunit --no-coverage          # PostgreSQL hvcrm_test con RLS (¡se borra en cada ejecución!)
 ```
 
-66 pruebas / 732 aserciones: unitarias, contrato de componentes, i18n y **seguridad** (aislamiento
+80 pruebas / 778 aserciones: unitarias, contrato de componentes, i18n y **seguridad** (aislamiento
 entre negocios y distribuidores, IDOR, RBAC/ABAC, CSRF, MFA, bloqueo, API, formularios públicos,
 inyección, RLS). Informe: [`docs/security/informe-pruebas-seguridad.md`](docs/security/informe-pruebas-seguridad.md).
 

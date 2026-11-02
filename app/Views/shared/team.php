@@ -9,7 +9,7 @@ $quota = $quota ?? null;
 ?>
 <?= view('partials/page_header', ['title' => $title, 'description' => lang('Core.teamHelp'),
     'actions' => $canEdit && ($quota === null || $quota > 0) ? '<button type="button" class="btn btn-primary" data-open-dialog="dlg-member">' . icon('user-plus') . esc(lang('Core.addMember')) . '</button>' : '']) ?>
-<?= view('partials/temp_password') ?>
+<?= view('partials/invitation_notice') ?>
 <?php if ($quota !== null): ?><div class="notice mb-3"><?= lang('Core.usersQuotaLeft', [$quota]) ?></div><?php endif ?>
 <?php if ($members === []): ?>
   <?= view('partials/empty', ['message' => lang('Core.teamEmpty')]) ?>
@@ -43,6 +43,19 @@ $quota = $quota ?? null;
   </tbody>
 </table></div>
 <?php endif ?>
+<?php if (! empty($invitations)): ?>
+<h2 class="mb-2 mt-6 text-sm font-semibold"><?= lang('Core.pendingInvitations') ?></h2>
+<div class="table-wrap"><table class="table">
+  <tbody><?php foreach ($invitations as $i): ?>
+    <tr>
+      <td><span class="font-medium"><?= esc($i['name']) ?></span><span class="block text-xs text-ink-soft"><?= esc($i['email']) ?></span></td>
+      <td><?= esc(lang('Roles.' . $i['role_code']) !== 'Roles.' . $i['role_code'] ? lang('Roles.' . $i['role_code']) : $i['role_name']) ?></td>
+      <td class="text-xs text-ink-soft"><?= lang('Core.expiresOn', [dt($i['expires_at'])]) ?></td>
+      <td class="num"><?php if ($canEdit): ?><?= view('partials/delete_button', ['action' => site_url($base . '/invitaciones/' . (int) $i['id'] . '/revocar'), 'label' => lang('Core.revoke')]) ?><?php endif ?></td>
+    </tr>
+  <?php endforeach ?></tbody>
+</table></div>
+<?php endif ?>
 <?php if ($canEdit): ?>
 <?= view('partials/drawer_start', ['id' => 'dlg-member', 'title' => lang('Core.addMember'), 'open' => $errors !== []]) ?>
 <form method="post" action="<?= site_url($base) ?>" class="flex min-h-0 flex-1 flex-col">
@@ -51,7 +64,7 @@ $quota = $quota ?? null;
     <?= view('partials/field', ['name' => 'name', 'label' => lang('Core.name'), 'required' => true, 'placeholder' => lang('Core.personNamePh')]) ?>
     <?= view('partials/field', ['name' => 'email', 'label' => lang('Core.email'), 'type' => 'email', 'required' => true, 'placeholder' => lang('Core.emailPh'), 'hint' => lang('Core.memberEmailHint')]) ?>
     <?= view('partials/field', ['name' => 'role_id', 'label' => lang('Core.role'), 'type' => 'select', 'options' => $roleOptions, 'required' => true]) ?>
-    <div class="notice"><?= lang('Core.tempPasswordExplain') ?></div>
+    <div class="notice"><?= lang('Core.invitationExplain') ?></div>
   </div>
   <div class="drawer-foot justify-end"><button type="button" class="btn btn-ghost" data-close-dialog><?= lang('Core.cancel') ?></button><button type="submit" class="btn btn-primary"><?= lang('Core.addMember') ?></button></div>
 </form>

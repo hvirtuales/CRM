@@ -47,6 +47,7 @@ class Services extends BaseService
                 static::$instances[$name]->flush();
             }
         }
+        unset(static::$instances['invitations']);
 
         return static::resetContext();
     }
@@ -99,6 +100,11 @@ class Services extends BaseService
     public static function supportGrants(bool $getShared = true): SupportGrantService
     {
         return $getShared ? static::getSharedInstance('supportGrants') : new SupportGrantService();
+    }
+
+    public static function invitations(bool $getShared = true): \App\Libraries\InvitationService
+    {
+        return $getShared ? static::getSharedInstance('invitations') : new \App\Libraries\InvitationService();
     }
 
     public static function apiTokens(bool $getShared = true): ApiTokenService

@@ -94,16 +94,37 @@ class Auth extends BaseController
                 db_connect()->table('users')->where('id', (int) $uid)->update(['locale' => $locale]);
             }
         }
-        // Solo redirecciones internas (evita open redirect).
-        $back = previous_url();
-        $base = rtrim(base_url(), '/');
+        return redirect()->to(self::safeInternalUrl((string) $this->request->getPost('back')));
+    }
 
-        return redirect()->to(str_starts_with($back, $base) ? $back : site_url('/'));
+    /**
+     * Solo URLs del mismo origen que baseURL (esquema + host + puerto exactos); si no, inicio.
+     * Evita open redirect con hosts como «crm.ejemplo.com.evil.com» o «crm.ejemplo.com@evil.com».
+     */
+    public static function safeInternalUrl(string $url): string
+    {
+        $base = parse_url(base_url());
+        $u    = parse_url($url);
+        if ($url === '' || $u === false || isset($u['user']) || isset($u['pass'])
+            || ($u['scheme'] ?? null) !== ($base['scheme'] ?? null)
+            || strtolower($u['host'] ?? '') !== strtolower($base['host'] ?? '')
+            || ($u['port'] ?? null) !== ($base['port'] ?? null)) {
+            return site_url('/');
+        }
+
+        return $url;
     }
 
     /** Si solo hay un ámbito disponible se entra directo; si no, selector. */
     private function afterLogin(int $userId)
     {
+        $pending = session('after_login');
+        if (is_string($pending) && preg_match('#^invitacion/[0-9a-f]{48}$#', $pending)) {
+            session()->remove('after_login');
+
+            return redirect()->to(site_url($pending)); // aceptar la invitación con la cuenta recién autenticada
+        }
+
         return redirect()->to(site_url(Services::contextSwitcher()->autoEnter($userId) ? '/' : 'contexto'));
     }
 }

@@ -39,7 +39,25 @@ class FormService
             ->where('f.public_id', $publicId)->where('f.status', 'published')->where('f.deleted_at', null)
             ->get()->getRowArray();
 
-        return $row && $row['company_status'] === 'active' ? $row : null;
+        if (! $row || ! $this->publiclyAvailable((int) $row['company_id'])) {
+            return null;
+        }
+
+        return $row;
+    }
+
+    /**
+     * La superficie pública respeta el interruptor de plataforma (componentes habilitados), el plan
+     * y el estado comercial del negocio: nada de capturas anónimas en un negocio suspendido.
+     */
+    private function publiclyAvailable(int $companyId): bool
+    {
+        $components = service('components');
+
+        return $components->isEnabled('form') && $components->isEnabled('crm')
+            && (new PlanGuard())->serviceEnabled($companyId)
+            && service('crmPlanGuard')->serviceEnabled($companyId)
+            && service('subscriptions')->companyOperational($companyId);
     }
 
     public function save(int $companyId, array $data, ?int $id = null): Result

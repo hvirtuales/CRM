@@ -150,7 +150,7 @@ class SubmissionService
             'idempotency_key' => $idem, 'data' => json_encode($clean, JSON_UNESCAPED_UNICODE),
             'contact_id' => $lead->data['contact_id'], 'opportunity_id' => $lead->data['opportunity_id'],
             'consent' => $consent ? 1 : 0, 'utm' => $utm ? json_encode($utm) : null,
-            'ip_hash' => hash_hmac('sha256', $ip, $this->key()), 'created_at' => date('Y-m-d H:i:s'),
+            'ip_hash' => hash_hmac('sha256', $ip, $this->key('hv-ip-hash')), 'created_at' => date('Y-m-d H:i:s'),
         ]);
         $db->table('cmp_form_forms')->where('id', $form['id'])->set('submissions_count', 'submissions_count + 1', false)->update();
 
@@ -159,17 +159,18 @@ class SubmissionService
 
     private function sign(string $publicId, string $payload): string
     {
-        return hash_hmac('sha256', 'form|' . $publicId . '|' . $payload, $this->key());
+        return hash_hmac('sha256', 'form|' . $publicId . '|' . $payload, $this->key('hv-form-token'));
     }
 
-    private function key(): string
+    /** Subclave derivada por propósito (HKDF): la clave de cifrado nunca se usa directamente como HMAC. */
+    private function key(string $purpose): string
     {
         $key = (string) config('Encryption')->key;
         if ($key === '') {
             throw new \RuntimeException('encryption.key no configurada');
         }
 
-        return $key;
+        return hash_hkdf('sha256', $key, 32, $purpose);
     }
 
     /** @return array{min_seconds:int, token_ttl:int, per_ip_per_minute:int} */

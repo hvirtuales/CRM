@@ -20,7 +20,7 @@
     </div>
     <?= $this->renderSection('content') ?>
     <p class="text-center text-xs text-ink-soft">
-      <a class="hover:text-ink" href="<?= site_url('idioma/es') ?>">Español</a> · <a class="hover:text-ink" href="<?= site_url('idioma/en') ?>">English</a>
+      <?= view('partials/locale_switch', ['class' => 'inline-flex items-center gap-1 hover:text-ink']) ?>
     </p>
   </div>
 </main>

@@ -30,18 +30,27 @@ final class Totp
     /** Verifica con ventana de ±1 paso para tolerar desfase de reloj. Comparación en tiempo constante. */
     public static function verify(string $secret, string $code, ?int $time = null): bool
     {
+        return self::matchStep($secret, $code, $time) !== null;
+    }
+
+    /**
+     * Paso de tiempo (time/30) que coincide con el código, o null. Permite rechazar la reutilización
+     * de un código ya aceptado (paso ≤ último aceptado).
+     */
+    public static function matchStep(string $secret, string $code, ?int $time = null): ?int
+    {
         $code = preg_replace('/\s+/', '', $code) ?? '';
         if (! preg_match('/^\d{6}$/', $code)) {
-            return false;
+            return null;
         }
         $time ??= time();
         foreach ([-30, 0, 30] as $drift) {
             if (hash_equals(self::code($secret, $time + $drift), $code)) {
-                return true;
+                return intdiv($time + $drift, 30);
             }
         }
 
-        return false;
+        return null;
     }
 
     public static function uri(string $secret, string $account, string $issuer): string

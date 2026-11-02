@@ -16,6 +16,7 @@ class Users extends BaseController
             'members' => Services::users()->members('company', null, $cid),
             'roles'   => Services::rbac()->assignableRoles('company', $cid),
             'base'    => 'negocio/usuarios',
+            'invitations' => Services::invitations()->pending('company', null, (int) Services::context()->companyId()),
             'canEdit' => auth_can('company.users.edit'),
             'quota'   => Services::plans()->usersRemaining($cid),
         ]);
@@ -24,9 +25,7 @@ class Users extends BaseController
     public function store()
     {
         $r = Services::users()->addMember('company', null, (int) Services::context()->companyId(), $this->request->getPost(), $this->actorId());
-        if ($r->ok && $r->data['temp_password']) {
-            session()->setFlashdata('temp_password', $r->data['temp_password']);
-        }
+        \App\Libraries\InvitationNotice::flash();
 
         return $this->afterResult($r, 'negocio/usuarios', lang('Core.memberAdded'));
     }
@@ -37,5 +36,10 @@ class Users extends BaseController
             Services::users()->updateMember($id, 'company', null, (int) Services::context()->companyId(), $this->request->getPost(), $this->actorId()),
             'negocio/usuarios'
         );
+    }
+
+    public function revokeInvitation(int $id)
+    {
+        return $this->afterResult(Services::invitations()->revoke($id, 'company', null, (int) Services::context()->companyId()), 'negocio/usuarios');
     }
 }

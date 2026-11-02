@@ -109,7 +109,8 @@ class DemoSeeder extends Seeder
         $member($ownerA2, 'company', null, $a2, 'business_owner');
 
         $subs = Services::subscriptions();
-        $subs->assignPlan($hv, $planIds['empresarial'], null, $super);
+        $r = $subs->assignPlan($hv, $planIds['empresarial'], null, $super); // sin prueba: nace pendiente de pago
+        $subs->registerPayment((int) $r->data['id'], '459000.00', 'transfer', 'DEMO-TRX-HV-0001', $super);
         $r = $subs->assignPlan($a1, $planIds['profesional'], $tenantId, $super);
         $subs->transition((int) $r->data['id'], 'active', $super);
         $subs->registerPayment((int) $r->data['id'], '189000.00', 'transfer', 'DEMO-TRX-0001', $super);

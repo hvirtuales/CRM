@@ -33,9 +33,7 @@ class Tenants extends BaseController
     public function store()
     {
         $result = Services::provisioning()->createTenant($this->request->getPost(), $this->actorId());
-        if ($result->ok && $result->data['temp_password']) {
-            session()->setFlashdata('temp_password', $result->data['temp_password']);
-        }
+        \App\Libraries\InvitationNotice::flash();
 
         return $this->afterResult($result, 'plataforma/distribuidores', lang('Core.tenantCreated'));
     }

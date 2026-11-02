@@ -24,7 +24,8 @@ class ApiTokenService
         if ($days < 1 || $days > 365) {
             return Result::fail(lang('Core.validation.fix'), ['days' => lang('Core.validation.days')]);
         }
-        $allowed   = $ctx->permissions();
+        // Solo habilidades que la API expone (lectura/alta/edición de componentes) Y que el creador tiene.
+        $allowed   = array_filter($ctx->permissions(), static fn ($p) => self::isApiAbility($p));
         $abilities = array_values(array_unique(array_filter($abilities, static fn ($a) => is_string($a) && in_array($a, $allowed, true))));
         if ($abilities === []) {
             return Result::fail(lang('Core.validation.fix'), ['abilities' => lang('Core.validation.abilities')]);
@@ -41,6 +42,11 @@ class ApiTokenService
         Services::audit()->log('api_token.created', 'api_token', $id, ['name' => $name, 'abilities' => $abilities]);
 
         return Result::success(['id' => $id, 'token' => $plain]);
+    }
+
+    public static function isApiAbility(string $permission): bool
+    {
+        return preg_match('/^[a-z]{3,8}\.(view|create|edit)$/', $permission) === 1 && ! str_starts_with($permission, 'company.');
     }
 
     public function revoke(int $tokenId, int $companyId): Result
@@ -71,7 +77,8 @@ class ApiTokenService
             return null;
         }
         $user = $db->table('users')->where('id', $tok['user_id'])->where('status', 'active')->where('deleted_at', null)->get()->getRowArray();
-        if (! $user) {
+        // Un cambio de contraseña (o revocación global de sesiones) invalida también los tokens anteriores.
+        if (! $user || ($user['password_changed_at'] && strtotime((string) $user['password_changed_at']) > strtotime((string) $tok['created_at']))) {
             return null;
         }
         $db->table('api_tokens')->where('id', $tok['id'])->update(['last_used_at' => date('Y-m-d H:i:s')]);

@@ -30,6 +30,7 @@ return [
     'quotaExhausted' => 'Alcanzó el máximo de cotizaciones de su plan. Amplíe el plan para continuar.',
     'serviceDisabled' => 'Su plan no incluye Cotizaciones. Contacte a su proveedor para activarlo.',
     'notFound' => 'La cotización no existe o no pertenece a su negocio.',
+    'notOwner' => 'La oportunidad pertenece a otro asesor. Pida a un gerente comercial que gestione la cotización.',
     'onlyDraftEditable' => 'Solo se pueden editar cotizaciones en borrador. Devuélvala a borrador para cambiarla.',
     'numberConflict' => 'No fue posible asignar el consecutivo. Intente de nuevo.',
     'transitionInvalid' => 'Ese cambio de estado no está permitido.',

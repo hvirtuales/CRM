@@ -38,9 +38,7 @@ class Companies extends BaseController
         $data = $this->request->getPost();
         unset($data['tenant_id']); // defensa explícita: el ámbito lo decide el servidor
         $r = Services::provisioning()->createCompany($data, (int) Services::context()->tenantId(), $this->actorId());
-        if ($r->ok && $r->data['temp_password']) {
-            session()->setFlashdata('temp_password', $r->data['temp_password']);
-        }
+        \App\Libraries\InvitationNotice::flash();
 
         return $this->afterResult($r, 'distribuidor/negocios', lang('Core.companyCreated'));
     }
@@ -58,6 +56,6 @@ class Companies extends BaseController
             return $this->afterResult(Result::fail(lang('Core.planInvalid')), 'distribuidor/negocios');
         }
 
-        return $this->afterResult(Services::subscriptions()->assignPlan($id, $planId, $tid, $this->actorId()), 'distribuidor/negocios', lang('Core.planAssigned'));
+        return $this->afterResult(Services::subscriptions()->assignPlan($id, $planId, $tid, $this->actorId(), true), 'distribuidor/negocios', lang('Core.planAssigned'));
     }
 }

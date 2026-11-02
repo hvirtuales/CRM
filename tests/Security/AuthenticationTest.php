@@ -103,9 +103,13 @@ final class AuthenticationTest extends HvTestCase
 
     public function testLanguageSwitchDoesNotOpenRedirect(): void
     {
-        $r = $this->withHeaders(['Referer' => 'https://evil.example/phish'])->get('idioma/en');
-        $location = $r->response()->getHeaderLine('Location');
-        $this->assertStringStartsWith(rtrim(base_url(), '/'), $location);
+        $base = rtrim(base_url(), '/');
+        foreach (['https://evil.example/phish', $base . '.evil.example/phish', 'http://x@' . parse_url($base, PHP_URL_HOST) . '/', '//evil.example'] as $back) {
+            $r = $this->withHeaders(['Referer' => $back])->post('idioma/en', ['back' => $back, 'csrf_hv' => self::CSRF]);
+            $this->assertSame(site_url('/'), $r->response()->getHeaderLine('Location'), $back);
+        }
+        $ok = $this->post('idioma/en', ['back' => site_url('crm/contactos'), 'csrf_hv' => self::CSRF]);
+        $this->assertSame(site_url('crm/contactos'), $ok->response()->getHeaderLine('Location'));
     }
 
     public function testSecurityHeadersArePresent(): void

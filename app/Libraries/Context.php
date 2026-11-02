@@ -193,8 +193,8 @@ class Context
             return;
         }
 
-        $sub = Services::subscriptions()->currentForCompany((int) $this->company['id']);
-        if ($sub && in_array($sub['status'], ['suspended', 'cancelled', 'archived'], true)) {
+        // Misma regla que la superficie pública: SubscriptionService::companyOperational().
+        if (! Services::subscriptions()->companyOperational((int) $this->company['id'])) {
             $this->readOnly       = true;
             $this->readOnlyReason = lang('Core.readOnlySubscription');
         }

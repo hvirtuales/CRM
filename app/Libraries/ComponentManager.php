@@ -99,6 +99,13 @@ class ComponentManager
                 $errors[] = "permiso '{$perm}' fuera del prefijo {$code}.";
             }
         }
+        foreach ($m['role_grants'] ?? [] as $role => $perms) {
+            foreach ((array) $perms as $perm) {
+                if (! isset(($m['permissions'] ?? [])[$perm])) {
+                    $errors[] = "role_grants de '{$role}' concede '{$perm}', que no es un permiso propio del componente";
+                }
+            }
+        }
         $icons = config(Icons::class)->available;
         foreach ($m['menus'] ?? [] as $menu) {
             if (! isset($menu['permission'], $menu['route'], $menu['label'])) {

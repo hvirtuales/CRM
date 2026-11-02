@@ -40,9 +40,7 @@ class Companies extends BaseController
     public function store()
     {
         $result = Services::provisioning()->createCompany($this->request->getPost(), null, $this->actorId());
-        if ($result->ok && $result->data['temp_password']) {
-            session()->setFlashdata('temp_password', $result->data['temp_password']);
-        }
+        \App\Libraries\InvitationNotice::flash();
 
         return $this->afterResult($result, 'plataforma/negocios', lang('Core.companyCreated'));
     }

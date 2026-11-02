@@ -11,14 +11,16 @@ use Config\Services;
 class UserService
 {
     /**
-     * Crea (o reutiliza por correo) un usuario y le da una membresía en el ámbito indicado.
+     * Invita a una persona a este ámbito. NO crea usuarios ni membresías: se envía un enlace de un
+     * solo uso al correo y solo su titular puede aceptarlo (InvitationService::accept). La respuesta
+     * es idéntica exista o no la cuenta (sin enumeración) y el administrador nunca ve contraseñas.
      *
-     * @param array{name?:string, email?:string, password?:string, role_id?:int|string} $data
+     * @param array{name?:string, email?:string, role_id?:int|string} $data
      */
     public function addMember(string $scope, ?int $tenantId, ?int $companyId, array $data, ?int $actorId): Result
     {
-        $name  = trim((string) ($data['name'] ?? ''));
-        $email = strtolower(trim((string) ($data['email'] ?? '')));
+        $name   = trim((string) ($data['name'] ?? ''));
+        $email  = strtolower(trim((string) ($data['email'] ?? '')));
         $roleId = (int) ($data['role_id'] ?? 0);
 
         $errors = [];
@@ -28,8 +30,7 @@ class UserService
         if (! filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($email) > 190) {
             $errors['email'] = lang('Core.validation.email');
         }
-        $role = $this->assignableRole($scope, $companyId, $roleId);
-        if (! $role) {
+        if (! $this->assignableRole($scope, $companyId, $roleId)) {
             $errors['role_id'] = lang('Core.validation.role');
         }
         if ($errors !== []) {
@@ -38,56 +39,19 @@ class UserService
 
         if ($scope === 'company' && $companyId !== null) {
             $left = Services::plans()->usersRemaining($companyId);
+            $left = $left === null ? null : $left - Services::invitations()->pendingCount('company', null, $companyId);
             if ($left !== null && $left <= 0) {
                 return Result::fail(lang('Core.usersQuotaExhausted'));
             }
         }
 
-        $db   = db_connect();
-        $user = $db->table('users')->where('email', $email)->where('deleted_at', null)->get()->getRowArray();
-        $tempPassword = null;
-        $now  = date('Y-m-d H:i:s');
+        return Services::invitations()->invite($scope, $tenantId, $companyId, $name, $email, $roleId, $actorId);
+    }
 
-        $db->transStart();
-        if (! $user) {
-            $password = (string) ($data['password'] ?? '');
-            if ($password === '') {
-                $tempPassword = $this->temporaryPassword();
-                $password     = $tempPassword;
-            } elseif ($problem = Services::auth()->passwordProblem($password, $email)) {
-                $db->transRollback();
-
-                return Result::fail($problem, ['password' => $problem]);
-            }
-            $db->table('users')->insert([
-                'public_id' => Ids::publicId(), 'name' => $name, 'email' => $email,
-                'password_hash' => AuthService::hashPassword($password), 'status' => 'active',
-                'locale' => service('request')->getLocale() ?: 'es', 'must_change_password' => 1,
-                'session_version' => 1, 'created_at' => $now, 'updated_at' => $now,
-            ]);
-            $userId = (int) $db->insertID();
-        } else {
-            $userId = (int) $user['id'];
-        }
-
-        $exists = $db->table('memberships')->where('user_id', $userId)->where('scope', $scope)
-            ->where('tenant_id', $tenantId)->where('company_id', $companyId)->get()->getRowArray();
-        if ($exists) {
-            $db->transRollback();
-
-            return Result::fail(lang('Core.memberExists'), ['email' => lang('Core.memberExists')], 409);
-        }
-
-        $db->table('memberships')->insert([
-            'user_id' => $userId, 'scope' => $scope, 'tenant_id' => $tenantId, 'company_id' => $companyId,
-            'role_id' => $roleId, 'status' => 'active', 'invited_by' => $actorId, 'created_at' => $now, 'updated_at' => $now,
-        ]);
-        $membershipId = (int) $db->insertID();
-        $db->transComplete();
-
-        Services::audit()->log('membership.created', 'membership', $membershipId, ['user_id' => $userId, 'role' => $role['code'], 'scope' => $scope], $companyId, $tenantId);
-
-        return Result::success(['user_id' => $userId, 'membership_id' => $membershipId, 'temp_password' => $tempPassword]);
+    /** Rol asignable en el ámbito (sistema o personalizado del mismo negocio). */
+    public function roleIsAssignable(string $scope, ?int $companyId, int $roleId): bool
+    {
+        return $this->assignableRole($scope, $companyId, $roleId) !== null;
     }
 
     /** Cambia rol o estado de una membresía comprobando que pertenece al ámbito del actor. */
@@ -116,6 +80,13 @@ class UserService
                 return Result::fail(lang('Core.validation.fix'));
             }
             $update['status'] = $data['status'];
+            // Reactivar consume cupo de usuarios igual que dar de alta.
+            if ($data['status'] === 'active' && $m['status'] !== 'active' && $scope === 'company' && $companyId !== null) {
+                $left = Services::plans()->usersRemaining($companyId);
+                if ($left !== null && $left <= 0) {
+                    return Result::fail(lang('Core.usersQuotaExhausted'), [], 409);
+                }
+            }
         }
 
         // No dejar el ámbito sin propietario activo.
@@ -161,13 +132,5 @@ class UserService
 
         return db_connect()->table('memberships')->where('scope', $m['scope'])->where('tenant_id', $m['tenant_id'])
             ->where('company_id', $m['company_id'])->where('role_id', $ownerRole)->where('status', 'active')->countAllResults() <= 1;
-    }
-
-    /** Contraseña temporal legible (se muestra una sola vez; el usuario debe cambiarla al entrar). */
-    public function temporaryPassword(): string
-    {
-        $words = ['Nube', 'Faro', 'Ruta', 'Puente', 'Mapa', 'Brisa', 'Cauce', 'Norte', 'Prisma', 'Vela'];
-
-        return $words[random_int(0, 9)] . '-' . bin2hex(random_bytes(4)) . '-' . $words[random_int(0, 9)] . random_int(10, 99);
     }
 }

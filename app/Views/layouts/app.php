@@ -94,7 +94,7 @@ $section = $this->renderSection('title');
           <?= icon('arrow-left-right', 14) ?><span class="hidden max-w-48 truncate sm:inline"><?= esc($ctx->organizationName() ?? lang('Core.chooseContext')) ?></span>
         </a>
         <button type="button" class="btn btn-ghost btn-sm" data-theme-toggle aria-label="<?= esc(lang('Core.toggleTheme'), 'attr') ?>"><?= icon('sun', 16) ?></button>
-        <a class="btn btn-ghost btn-sm" href="<?= site_url('idioma/' . (service('request')->getLocale() === 'es' ? 'en' : 'es')) ?>" aria-label="<?= esc(lang('Core.switchLanguage'), 'attr') ?>"><?= icon('languages', 16) ?><span class="uppercase"><?= service('request')->getLocale() === 'es' ? 'en' : 'es' ?></span></a>
+        <?= view('partials/locale_switch', ['class' => 'btn btn-ghost btn-sm']) ?>
         <a class="btn btn-ghost btn-sm hidden sm:inline-flex" href="<?= site_url('perfil') ?>"><?= esc($user['name'] ?? '') ?></a>
         <form method="post" action="<?= site_url('salir') ?>"><?= csrf_field() ?>
           <button class="btn btn-ghost btn-sm" type="submit" aria-label="<?= esc(lang('Auth.logout'), 'attr') ?>"><?= icon('log-out', 16) ?></button>

@@ -30,6 +30,7 @@ return [
     'quotaExhausted' => 'You reached your plan quote limit. Upgrade the plan to continue.',
     'serviceDisabled' => 'Your plan does not include Quotes. Contact your provider to enable it.',
     'notFound' => 'The quote does not exist or does not belong to your business.',
+    'notOwner' => 'The opportunity belongs to another rep. Ask a sales manager to handle the quote.',
     'onlyDraftEditable' => 'Only draft quotes can be edited. Move it back to draft to change it.',
     'numberConflict' => 'Could not assign the sequence number. Try again.',
     'transitionInvalid' => 'That status change is not allowed.',

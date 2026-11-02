@@ -11,7 +11,7 @@ class Tokens extends BaseController
     {
         $ctx = Services::context();
         // Solo habilidades que la API expone y que el actor tiene.
-        $apiAbilities = array_values(array_filter($ctx->permissions(), static fn ($p) => preg_match('/^[a-z]{3,8}\.(view|create|edit)$/', $p) && ! str_starts_with($p, 'company.')));
+        $apiAbilities = array_values(array_filter($ctx->permissions(), static fn ($p) => \App\Libraries\ApiTokenService::isApiAbility($p)));
 
         return view('company/tokens', [
             'tokens'    => Services::apiTokens()->forCompany((int) $ctx->companyId()),

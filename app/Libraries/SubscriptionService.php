@@ -22,22 +22,47 @@ class SubscriptionService
 
     public const OPEN_STATUSES = ['trial', 'active', 'past_due', 'suspended'];
 
+    /** Suscripción más reciente del negocio, en CUALQUIER estado (archivada incluida). */
     public function currentForCompany(int $companyId): ?array
     {
         return db_connect()->table('subscriptions')
             ->where('company_id', $companyId)
             ->where('subscriber_type', 'company')
-            ->whereIn('status', array_merge(self::OPEN_STATUSES, ['cancelled']))
             ->orderBy('id', 'DESC')
             ->get(1)->getRowArray() ?: null;
     }
 
     /**
+     * ¿Puede el negocio operar (escribir, recibir formularios, publicar cotizaciones)?
+     * No si está suspendido/archivado, si su suscripción está suspendida/cancelada/archivada,
+     * o si es de un distribuidor y no tiene suscripción. Una sola regla para web, API y superficie pública.
+     */
+    public function companyOperational(int $companyId): bool
+    {
+        $c = db_connect()->table('companies')->select('status, tenant_id')->where('id', $companyId)->get()->getRowArray();
+        if (! $c || $c['status'] !== 'active') {
+            return false;
+        }
+        $sub = $this->currentForCompany($companyId);
+        if ($sub === null) {
+            return $c['tenant_id'] === null;
+        }
+
+        return ! in_array($sub['status'], ['suspended', 'cancelled', 'archived'], true);
+    }
+
+    /**
      * Asigna (o cambia) el plan de un negocio. Cierra la suscripción abierta anterior.
+     *
+     * Reglas comerciales (evitan servicio gratuito indefinido):
+     *  - Un cambio de plan NO extiende el periodo ni levanta mora/suspensión: hereda estado y corte.
+     *  - La prueba gratuita se concede una sola vez por negocio.
+     *  - Sin prueba, la suscripción nace «en mora» (pendiente del primer pago, con periodo de gracia).
+     *  - Un distribuidor no puede cambiar el plan de un negocio en mora, suspendido o cancelado.
      *
      * @param int|null $soldByTenantId distribuidor que comercializa (para comisiones)
      */
-    public function assignPlan(int $companyId, int $planId, ?int $soldByTenantId, ?int $actorId): Result
+    public function assignPlan(int $companyId, int $planId, ?int $soldByTenantId, ?int $actorId, bool $byTenant = false): Result
     {
         $db   = db_connect();
         $plan = $db->table('plans')->where('id', $planId)->where('is_active', 1)->where('target', 'company')->get()->getRowArray();
@@ -45,32 +70,47 @@ class SubscriptionService
             return Result::fail(lang('Core.planInvalid'));
         }
 
-        $now   = time();
-        $trial = (int) $plan['trial_days'] > 0;
-        $db->transStart();
-
+        $now     = time();
         $current = $this->currentForCompany($companyId);
-        if ($current && in_array($current['status'], self::OPEN_STATUSES, true)) {
+        if ($byTenant && $current && ! in_array($current['status'], ['trial', 'active'], true)) {
+            return Result::fail(lang('Core.planChangeBlocked'), [], 409);
+        }
+        $isOpen = $current && in_array($current['status'], self::OPEN_STATUSES, true);
+        $hadAny = $db->table('subscriptions')->where('company_id', $companyId)->countAllResults() > 0;
+
+        if ($isOpen) {
+            // Cambio de plan: mismo estado y mismo corte (no regala tiempo ni levanta la suspensión).
+            $status    = $current['status'];
+            $periodEnd = strtotime((string) $current['current_period_end']) ?: $now;
+            $trialEnd  = $current['trial_ends_at'];
+        } elseif (! $hadAny && (int) $plan['trial_days'] > 0) {
+            $status    = 'trial';
+            $periodEnd = strtotime('+' . (int) $plan['trial_days'] . ' days', $now);
+            $trialEnd  = date('Y-m-d H:i:s', $periodEnd);
+        } else {
+            $status    = 'past_due'; // pendiente del primer pago; el ciclo diario aplica la gracia
+            $periodEnd = $now;
+            $trialEnd  = null;
+        }
+
+        $db->transStart();
+        if ($isOpen) {
             $db->table('subscriptions')->where('id', $current['id'])->update([
                 'status' => 'cancelled', 'cancelled_at' => date('Y-m-d H:i:s', $now), 'updated_at' => date('Y-m-d H:i:s', $now),
             ]);
         }
-
-        $periodEnd = $trial
-            ? strtotime('+' . (int) $plan['trial_days'] . ' days', $now)
-            : strtotime($plan['billing_period'] === 'yearly' ? '+1 year' : '+1 month', $now);
 
         $db->table('subscriptions')->insert([
             'subscriber_type'    => 'company',
             'company_id'         => $companyId,
             'sold_by_tenant_id'  => $soldByTenantId,
             'plan_id'            => $planId,
-            'status'             => $trial ? 'trial' : 'active',
+            'status'             => $status,
             'price'              => $plan['price'],
             'currency'           => $plan['currency'],
             'billing_period'     => $plan['billing_period'],
             'started_at'         => date('Y-m-d H:i:s', $now),
-            'trial_ends_at'      => $trial ? date('Y-m-d H:i:s', $periodEnd) : null,
+            'trial_ends_at'      => $trialEnd,
             'current_period_end' => date('Y-m-d H:i:s', $periodEnd),
             'created_by'         => $actorId,
             'created_at'         => date('Y-m-d H:i:s', $now),
@@ -102,6 +142,11 @@ class SubscriptionService
             $data['cancelled_at'] = date('Y-m-d H:i:s');
         }
         $db->table('subscriptions')->where('id', $subscriptionId)->update($data);
+        if ($to === 'archived' && $sub['company_id']) {
+            // Archivada = sin derechos comerciales: el plan deja de conceder componentes.
+            $db->table('companies')->where('id', $sub['company_id'])->update(['plan_id' => null, 'updated_at' => date('Y-m-d H:i:s')]);
+            Services::plans()->flush();
+        }
         Services::audit()->log('subscription.' . $to, 'subscription', $subscriptionId, ['from' => $sub['status'], 'by' => $actorId], $sub['company_id'] ? (int) $sub['company_id'] : null);
 
         return Result::success();
@@ -125,6 +170,9 @@ class SubscriptionService
         }
 
         $dup = $db->table('payments')->where('method', $method)->where('reference', $reference)->get()->getRowArray();
+        if ($dup && (int) $dup['subscription_id'] !== $subscriptionId) {
+            return Result::fail(lang('Core.paymentReferenceUsed'), [], 409); // referencia de OTRA suscripción
+        }
         if ($dup) {
             return Result::success(['id' => (int) $dup['id'], 'duplicate' => true], lang('Core.paymentDuplicate'));
         }

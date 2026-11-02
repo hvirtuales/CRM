@@ -128,7 +128,7 @@ final class TenantIsolationTest extends HvTestCase
 
         // tenant_id inyectado en el alta: se ignora, el negocio queda en SU cartera
         $as()->postForm('distribuidor/negocios', [
-            'name' => 'Negocio Inyectado', 'tenant_id' => 999999, 'timezone' => 'America/Bogota', 'currency' => 'COP', 'locale' => 'es',
+            'name' => 'Negocio Inyectado', 'tenant_id' => 999999, 'plan_id' => $plan, 'timezone' => 'America/Bogota', 'currency' => 'COP', 'locale' => 'es',
             'owner_name' => 'Dueño', 'owner_email' => 'inyectado' . uniqid() . '@x.test',
         ]);
         $row = $this->db()->table('companies')->where('name', 'Negocio Inyectado')->get()->getRow();

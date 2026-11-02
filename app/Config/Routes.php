@@ -17,7 +17,10 @@ $routes->post('ingresar', 'Auth::attempt');
 $routes->get('mfa', 'Auth::mfa', ['filter' => 'auth:noscope']);
 $routes->post('mfa', 'Auth::verifyMfa', ['filter' => 'auth:noscope']);
 $routes->post('salir', 'Auth::logout');
-$routes->get('idioma/(:segment)', 'Auth::locale/$1');
+// Invitaciones: públicas (el token es la credencial); aceptar exige ser el titular del correo.
+$routes->get('invitacion/(:segment)', 'Invitations::show/$1');
+$routes->post('invitacion/(:segment)', 'Invitations::accept/$1');
+$routes->post('idioma/(:segment)', 'Auth::locale/$1'); // POST + CSRF: cambia preferencias
 
 $routes->group('', ['filter' => 'auth:noscope'], static function (RouteCollection $routes) {
     $routes->get('contexto', 'ContextController::index');
@@ -64,6 +67,7 @@ $routes->group('plataforma', ['namespace' => 'App\Controllers\Platform', 'filter
     $routes->get('equipo', 'Team::index', ['filter' => 'permission:platform.users.view']);
     $routes->post('equipo', 'Team::store', ['filter' => 'permission:platform.users.edit']);
     $routes->post('equipo/(:num)', 'Team::update/$1', ['filter' => 'permission:platform.users.edit']);
+    $routes->post('equipo/invitaciones/(:num)/revocar', 'Team::revokeInvitation/$1', ['filter' => 'permission:platform.users.edit']);
 
     $routes->get('soporte', 'Support::index', ['filter' => 'permission:platform.support.request']);
     $routes->post('soporte', 'Support::store', ['filter' => 'permission:platform.support.request']);
@@ -82,6 +86,7 @@ $routes->group('distribuidor', ['namespace' => 'App\Controllers\Tenant', 'filter
     $routes->get('equipo', 'Team::index', ['filter' => 'permission:tenant.users.view']);
     $routes->post('equipo', 'Team::store', ['filter' => 'permission:tenant.users.edit']);
     $routes->post('equipo/(:num)', 'Team::update/$1', ['filter' => 'permission:tenant.users.edit']);
+    $routes->post('equipo/invitaciones/(:num)/revocar', 'Team::revokeInvitation/$1', ['filter' => 'permission:tenant.users.edit']);
     $routes->get('marca', 'Branding::index', ['filter' => 'permission:tenant.branding.edit']);
     $routes->post('marca', 'Branding::update', ['filter' => 'permission:tenant.branding.edit']);
     $routes->get('auditoria', 'Audit::index', ['filter' => 'permission:tenant.audit.view']);
@@ -93,6 +98,7 @@ $routes->group('negocio', ['namespace' => 'App\Controllers\Company', 'filter' =>
     $routes->get('usuarios', 'Users::index', ['filter' => 'permission:company.users.view']);
     $routes->post('usuarios', 'Users::store', ['filter' => 'permission:company.users.edit']);
     $routes->post('usuarios/(:num)', 'Users::update/$1', ['filter' => 'permission:company.users.edit']);
+    $routes->post('usuarios/invitaciones/(:num)/revocar', 'Users::revokeInvitation/$1', ['filter' => 'permission:company.users.edit']);
     $routes->get('plan', 'Plan::index', ['filter' => 'permission:company.subscription.view']);
     $routes->get('configuracion', 'Settings::index', ['filter' => 'permission:company.settings.edit']);
     $routes->post('configuracion', 'Settings::update', ['filter' => 'permission:company.settings.edit']);

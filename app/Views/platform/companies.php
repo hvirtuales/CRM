@@ -13,7 +13,7 @@ foreach ($tenants as $t) { $tenantOptions[$t['id']] = $t['name']; }
     'title' => lang('Nav.companies'), 'description' => lang('Platform.companiesHelp'),
     'actions' => $canCreate ? '<button type="button" class="btn btn-primary" data-open-dialog="dlg-new">' . icon('plus') . esc(lang('Platform.newDirectCompany')) . '</button>' : '',
 ]) ?>
-<?= view('partials/temp_password') ?>
+<?= view('partials/invitation_notice') ?>
 <form method="get" class="mb-3 flex flex-wrap items-center gap-2" data-autosubmit>
   <div class="relative w-full max-w-sm"><?= icon('search', 16, 'pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink-soft') ?><input class="input pl-9" type="search" name="q" value="<?= esc($q, 'attr') ?>" placeholder="<?= esc(lang('Platform.searchCompanies'), 'attr') ?>" aria-label="<?= esc(lang('Core.search'), 'attr') ?>"></div>
   <select class="select w-56" name="tenant" aria-label="<?= esc(lang('Platform.tenant'), 'attr') ?>">

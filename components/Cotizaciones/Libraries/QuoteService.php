@@ -70,7 +70,10 @@ class QuoteService
             ->join('companies co', 'co.id = q.company_id')
             ->where('q.public_id', $publicId)->whereIn('q.status', ['sent', 'accepted', 'rejected'])->where('q.deleted_at', null)
             ->get()->getRowArray();
-        if (! $row) {
+        $components = service('components');
+        if (! $row || ! $components->isEnabled('quote') || ! $components->isEnabled('crm')
+            || ! (new PlanGuard())->serviceEnabled((int) $row['company_id'])
+            || ! service('subscriptions')->companyOperational((int) $row['company_id'])) {
             return null;
         }
         $c = service('crmContacts')->summaries((int) $row['company_id'], [(int) $row['contact_id']])[(int) $row['contact_id']] ?? null;
@@ -108,6 +111,8 @@ class QuoteService
             $opp = ctype_digit($oppId) ? service('crmOpportunities')->find($companyId, (int) $oppId) : null;
             if (! $opp) {
                 $errors['opportunity_id'] = lang('Quote.validation.opportunity');
+            } elseif (! service('crmOpportunities')->canTouch($opp, $actorId)) {
+                return Result::fail(lang('Quote.notOwner'), [], 403); // misma regla ABAC del CRM
             } else {
                 $opportunityId = (int) $opp['id'];
                 $contactId     = (int) $opp['contact_id'];
@@ -168,6 +173,10 @@ class QuoteService
         }
         if (! in_array($to, self::TRANSITIONS[$q['status']] ?? [], true)) {
             return Result::fail(lang('Quote.transitionInvalid'), [], 409);
+        }
+        if ($q['opportunity_id'] && ($opp = service('crmOpportunities')->find($companyId, (int) $q['opportunity_id']))
+            && ! service('crmOpportunities')->canTouch($opp, $actorId)) {
+            return Result::fail(lang('Quote.notOwner'), [], 403);
         }
         $data = ['status' => $to, 'updated_at' => date('Y-m-d H:i:s')];
         if ($to === 'sent') {
