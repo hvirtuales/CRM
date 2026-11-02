@@ -34,6 +34,7 @@ class Filters extends BaseFilters
         'forcehttps'    => ForceHTTPS::class,
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
+        'requeststate'  => \App\Filters\RequestStateFilter::class,
         'auth'          => \App\Filters\AuthFilter::class,
         'permission'    => \App\Filters\PermissionFilter::class,
         'apiauth'       => \App\Filters\ApiAuthFilter::class,
@@ -78,6 +79,7 @@ class Filters extends BaseFilters
      */
     public array $globals = [
         'before' => [
+            'requeststate',
             'locale',
             'invalidchars',
             // CSRF en toda petición de navegador. Excepciones justificadas:

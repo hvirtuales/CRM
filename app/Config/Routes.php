@@ -12,7 +12,7 @@ $routes->setAutoRoute(false);
 $routes->get('/', 'Home::index');
 
 // ---------------------------------------------------------------- Acceso
-$routes->get('ingresar', 'Auth::login', ['as' => 'login']);
+$routes->get('ingresar', 'Auth::login');
 $routes->post('ingresar', 'Auth::attempt');
 $routes->get('mfa', 'Auth::mfa', ['filter' => 'auth:noscope']);
 $routes->post('mfa', 'Auth::verifyMfa', ['filter' => 'auth:noscope']);

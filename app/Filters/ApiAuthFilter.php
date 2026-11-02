@@ -16,6 +16,7 @@ class ApiAuthFilter implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
+        Services::resetRequestState();
         $header = $request->getHeaderLine('Authorization');
         if (! preg_match('/^Bearer\s+(\S+)$/', $header, $m)) {
             return $this->fail(401, lang('Core.apiUnauthorized'));

@@ -36,6 +36,21 @@ class Services extends BaseService
         return $ctx;
     }
 
+    /**
+     * Estado por petición: nuevo contexto y cachés vacías. Evita que el ámbito o los permisos de
+     * una petición se filtren a la siguiente (modo worker de CI 4.7, pruebas, procesos largos).
+     */
+    public static function resetRequestState(): Context
+    {
+        foreach (['rbac', 'plans', 'components'] as $name) {
+            if (isset(static::$instances[$name])) {
+                static::$instances[$name]->flush();
+            }
+        }
+
+        return static::resetContext();
+    }
+
     public static function rbac(bool $getShared = true): RbacService
     {
         return $getShared ? static::getSharedInstance('rbac') : new RbacService();

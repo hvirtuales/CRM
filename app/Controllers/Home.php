@@ -9,7 +9,7 @@ class Home extends BaseController
 {
     public function index()
     {
-        $ctx = Services::context();
+        $ctx = Services::resetRequestState();
         if (! $ctx->loadFromSession()) {
             return redirect()->to(site_url('ingresar'));
         }

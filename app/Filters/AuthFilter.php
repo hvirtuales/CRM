@@ -16,13 +16,13 @@ class AuthFilter implements FilterInterface
 {
     public function before(RequestInterface $request, $arguments = null)
     {
-        $ctx = Services::context();
+        $ctx = Services::resetRequestState();
         if (! $ctx->loadFromSession()) {
             if (session('user_id')) {
                 session()->destroy();
             }
 
-            return $this->deny($request, 'login', lang('Auth.loginRequired'));
+            return $this->deny($request, 'ingresar', lang('Auth.loginRequired'));
         }
 
         $path = trim($request->getUri()->getPath(), '/');

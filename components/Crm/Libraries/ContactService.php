@@ -212,6 +212,10 @@ class ContactService
             'notes' => mb_substr(trim((string) ($d['notes'] ?? '')), 0, 5000) ?: null,
             'consent_marketing' => ! empty($d['consent_marketing']) ? 1 : 0,
         ];
+        // Origen del consentimiento (p. ej. form:<id>:v<versión>) para trazabilidad Ley 1581.
+        if (isset($d['consent_source']) && is_string($d['consent_source']) && preg_match('/^[a-z]+(:[0-9a-z]{1,40}){0,2}(:v\d{1,6})?$/', $d['consent_source'])) {
+            $out['consent_source'] = $d['consent_source'];
+        }
         if ($owner !== null) {
             $out['owner_user_id'] = $owner;
         }

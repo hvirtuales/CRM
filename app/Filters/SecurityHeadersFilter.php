@@ -39,6 +39,8 @@ class SecurityHeadersFilter implements FilterInterface
         ]));
         if ($ancestors === '') {
             $response->setHeader('X-Frame-Options', 'DENY');
+        } else {
+            $response->removeHeader('X-Frame-Options'); // frame-ancestors manda; XFO no admite listas
         }
         $response->setHeader('X-Content-Type-Options', 'nosniff');
         $response->setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
