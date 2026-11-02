@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'dashboardTitle' => 'Panel de cartera',
+    'dashboardHelp' => 'Sus negocios, ingresos recurrentes, renovaciones y comisiones.',
+    'kpiCompanies' => 'Negocios activos',
+    'kpiTrials' => 'En prueba',
+    'newCompany' => 'Incorporar negocio',
+    'noCommissions' => 'Aún no hay comisiones. Se generan con cada pago de sus negocios.',
+    'privacyNote' => 'Por privacidad, el distribuidor ve datos comerciales de su cartera, no los contactos ni la operación interna de cada negocio.',
+    'companiesHelp' => 'Negocios de su cartera. Solo usted y la plataforma los ven.',
+    'companiesEmpty' => 'Aún no ha incorporado negocios. Use «Incorporar negocio» para crear el primero con su plan.',
+    'subscriptionsHelp' => 'Estado de las suscripciones de su cartera.',
+    'commissionsHelp' => 'Comisiones generadas por los pagos de sus negocios y su estado de liquidación.',
+    'brandingHelp' => 'Nombre y color con que su equipo y sus negocios ven la plataforma.',
+    'identity' => 'Identidad',
+    'brandName' => 'Nombre visible',
+    'brandNameHint' => 'Vacío = HV CRM.',
+    'brandColor' => 'Color de acento',
+    'brandColorHint' => 'Formato #RRGGBB. El texto sobre el color se ajusta para mantener contraste legible.',
+    'colorBlue' => 'Azul', 'colorGreen' => 'Verde', 'colorPurple' => 'Morado', 'colorOrange' => 'Naranja',
+    'colorTeal' => 'Turquesa', 'colorPink' => 'Fucsia', 'colorGraphite' => 'Grafito',
+    'preview' => 'Vista previa',
+    'previewHelp' => 'Así se ven los elementos con el color guardado. Guarde para ver el cambio.',
+    'previewPrimary' => 'Acción principal',
+    'previewSecondary' => 'Secundaria',
+];

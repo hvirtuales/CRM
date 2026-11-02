@@ -1,0 +1,24 @@
+<?php
+
+return [
+    'groupOperation' => 'Operación',
+    'groupBilling' => 'Comercial',
+    'groupSettings' => 'Configuración',
+    'dashboard' => 'Panel',
+    'portfolio' => 'Cartera',
+    'tenants' => 'Distribuidores',
+    'companies' => 'Negocios',
+    'plans' => 'Planes',
+    'subscriptions' => 'Suscripciones',
+    'subscription' => 'Plan y consumo',
+    'commissions' => 'Comisiones',
+    'components' => 'Componentes',
+    'team' => 'Equipo',
+    'users' => 'Usuarios',
+    'support' => 'Soporte',
+    'audit' => 'Auditoría',
+    'branding' => 'Marca blanca',
+    'settings' => 'Configuración',
+    'tokens' => 'Tokens de API',
+    'profile' => 'Mi perfil',
+];

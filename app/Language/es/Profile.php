@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'description' => 'Sus datos personales y la seguridad de su cuenta.',
+    'personal' => 'Datos personales',
+    'emailHint' => 'El correo es su identificador de acceso; para cambiarlo contacte al administrador.',
+    'language' => 'Idioma',
+    'security' => 'Seguridad',
+    'changePassword' => 'Cambiar contraseña',
+    'passwordChangedAt' => 'Último cambio: {0}',
+    'currentPassword' => 'Contraseña actual',
+    'newPassword' => 'Nueva contraseña',
+    'confirmPassword' => 'Confirmar nueva contraseña',
+    'passwordPolicy' => 'Mínimo {0} caracteres. Una frase de varias palabras es más segura y fácil de recordar.',
+    'mfa' => 'Verificación en dos pasos',
+    'mfaOn' => 'Activa: se pide un código al ingresar.',
+    'mfaOff' => 'Inactiva. Actívela para proteger su cuenta.',
+    'mfaActive' => 'Su cuenta está protegida con un código de su aplicación autenticadora.',
+    'mfaDisable' => 'Desactivar verificación',
+    'mfaDisableConfirm' => '¿Desactivar la verificación en dos pasos? Su cuenta quedará protegida solo por la contraseña.',
+    'mfaSetupHelp' => 'Use Google Authenticator, Microsoft Authenticator u otra aplicación compatible (TOTP).',
+    'mfaStep1' => 'Abra su aplicación autenticadora y elija «Agregar cuenta».',
+    'mfaStep2' => 'Ingrese esta clave manualmente (tipo «basada en tiempo»):',
+    'mfaStep3' => 'Escriba el código de 6 dígitos que muestra la aplicación.',
+    'mfaUri' => 'Ver enlace otpauth para gestores de contraseñas',
+    'mfaEnable' => 'Activar verificación',
+];

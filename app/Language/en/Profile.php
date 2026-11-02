@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'description' => 'Your personal details and account security.',
+    'personal' => 'Personal details',
+    'emailHint' => 'Your email is your sign-in identifier; contact the administrator to change it.',
+    'language' => 'Language',
+    'security' => 'Security',
+    'changePassword' => 'Change password',
+    'passwordChangedAt' => 'Last change: {0}',
+    'currentPassword' => 'Current password',
+    'newPassword' => 'New password',
+    'confirmPassword' => 'Confirm new password',
+    'passwordPolicy' => 'At least {0} characters. A multi-word phrase is safer and easier to remember.',
+    'mfa' => 'Two-step verification',
+    'mfaOn' => 'On: a code is required at sign-in.',
+    'mfaOff' => 'Off. Turn it on to protect your account.',
+    'mfaActive' => 'Your account is protected with a code from your authenticator app.',
+    'mfaDisable' => 'Disable verification',
+    'mfaDisableConfirm' => 'Disable two-step verification? Your account will be protected by the password only.',
+    'mfaSetupHelp' => 'Use Google Authenticator, Microsoft Authenticator or any compatible (TOTP) app.',
+    'mfaStep1' => 'Open your authenticator app and choose “Add account”.',
+    'mfaStep2' => 'Enter this key manually (“time based” type):',
+    'mfaStep3' => 'Type the 6-digit code shown by the app.',
+    'mfaUri' => 'Show otpauth link for password managers',
+    'mfaEnable' => 'Enable verification',
+];
