@@ -24,9 +24,6 @@ php spark hv:create-owner admin@empresa.com "Nombre Apellido"   # pide la contra
 
 El alta de usuarios es por **invitación al correo** (configure `email.fromEmail` y SMTP en `.env`); nadie ve contraseñas ajenas.
 
-```bash
-```
-
 Desarrollo con datos de demostración (se niega a correr en producción):
 
 ```bash
