@@ -7,7 +7,11 @@ de su red de distribuidores. Tres espacios operativos con aislamiento estricto:
 |---|---|---|
 | **Superadministrador** (`/plataforma`) | Equipo HV | Distribuidores, negocios directos, planes, suscripciones, pagos, comisiones, componentes, soporte, auditoría |
 | **Distribuidor** (`/distribuidor`) | Revendedores | Cartera de negocios, alta con plan, renovaciones, comisiones, equipo, marca blanca |
-| **Negocio** (`/negocio`, `/crm`, `/formularios`, `/cotizaciones`) | Clientes finales (incluida HV) | Contactos, proyectos, embudo kanban, formularios de captación, cotizaciones, usuarios, tokens API |
+| **Negocio** (`/negocio`, `/crm`, `/formularios`, `/cotizaciones`) | Clientes finales (incluida HV) | Contactos, proyectos, embudo kanban, seguimiento, formularios de captación, cotizaciones, usuarios, tokens API |
+
+**Automatización comercial** ([ADR 0004](docs/adr/0004-automatizacion-comercial.md)): reparto de leads por
+proyecto, alertas de seguimiento con escalamiento, cierre/vencimiento de cotizaciones, oportunidades de
+renovación, fin de prueba y ampliación, y liquidación mensual de comisiones.
 
 **Stack:** PHP 8.3+ (objetivo 8.4) · CodeIgniter 4.7 · PostgreSQL (portable a MySQL/SQL Server) ·
 Tailwind CSS 4 (CLI autónomo, **sin Node**) · JavaScript nativo · sin React/Python.
@@ -34,7 +38,7 @@ php spark serve
 CSS (solo si cambian vistas): `./bin/build-css.sh` descarga el CLI de Tailwind v4.1.11 verificado por
 SHA-256 y compila `public/assets/css/app.css` (el CSS compilado se versiona).
 
-Tarea diaria (ciclo de vida de suscripciones):
+Tarea diaria (suscripciones, oportunidades automáticas, comisiones y tareas de componentes):
 
 ```
 15 2 * * * cd /var/www/hv-crm && php spark hv:lifecycle >> writable/logs/lifecycle.log 2>&1
@@ -46,7 +50,7 @@ Tarea diaria (ciclo de vida de suscripciones):
 vendor/bin/phpunit --no-coverage          # PostgreSQL hvcrm_test con RLS (¡se borra en cada ejecución!)
 ```
 
-80 pruebas / 778 aserciones: unitarias, contrato de componentes, i18n y **seguridad** (aislamiento
+94 pruebas / 875 aserciones: unitarias, contrato de componentes, i18n y **seguridad** (aislamiento
 entre negocios y distribuidores, IDOR, RBAC/ABAC, CSRF, MFA, bloqueo, API, formularios públicos,
 inyección, RLS). Informe: [`docs/security/informe-pruebas-seguridad.md`](docs/security/informe-pruebas-seguridad.md).
 

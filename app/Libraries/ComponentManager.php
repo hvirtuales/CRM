@@ -25,6 +25,9 @@ class ComponentManager
     /** @var array<string, string>|null code => status */
     private ?array $status = null;
 
+    /** @var list<string>|null columnas de `plans` (memo por petición) */
+    private ?array $planFields = null;
+
     /**
      * Manifests válidos indexados por code.
      *
@@ -175,6 +178,22 @@ class ComponentManager
             $log[] = "{$code}: {$m['version']} sincronizado";
         }
 
+        // Verificación: toda columna de plan declarada en un Manifest debe existir tras migrar.
+        $this->planFields = null;
+        $db->resetDataCache();
+        $fields  = $db->getFieldNames('plans');
+        $missing = [];
+        foreach ($this->manifests() as $m) {
+            foreach (array_merge(isset($m['plan_flag']) ? [$m['plan_flag']] : [], array_column($m['plan_limits'] ?? [], 'column')) as $col) {
+                if (! in_array($col, $fields, true)) {
+                    $missing[] = $m['code'] . ':' . $col;
+                }
+            }
+        }
+        if ($missing !== []) {
+            throw new \RuntimeException('Columnas de plan faltantes tras migrar: ' . implode(', ', $missing));
+        }
+
         Services::rbac()->sync();
         $log[] = 'permisos y roles sincronizados';
 
@@ -285,8 +304,14 @@ class ComponentManager
      */
     public function planFormGroups(): array
     {
+        // Sin caché de tablas del driver (puede quedar obsoleta tras migrar en el mismo proceso);
+        // memoizado por petición en $planFields.
         $db     = db_connect();
-        $fields = $db->tableExists('plans') ? $db->getFieldNames('plans') : [];
+        if ($this->planFields === null) {
+            $db->resetDataCache();
+            $this->planFields = $db->tableExists('plans', false) ? $db->getFieldNames('plans') : [];
+        }
+        $fields = $this->planFields;
         $groups = [];
 
         foreach ($this->manifests() as $code => $m) {
@@ -385,6 +410,7 @@ class ComponentManager
 
     public function flush(): void
     {
+        $this->planFields = null;
         $this->status    = null;
         $this->manifests = null;
     }

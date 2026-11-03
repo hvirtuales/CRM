@@ -23,7 +23,7 @@ return [
     'taxes' => 'Taxes',
     'status' => 'Status',
     'all' => 'All',
-    'statuses' => ['draft' => 'Draft', 'sent' => 'Sent', 'accepted' => 'Accepted', 'rejected' => 'Rejected', 'void' => 'Void'],
+    'statuses' => [ 'expired' => 'Expired','draft' => 'Draft', 'sent' => 'Sent', 'accepted' => 'Accepted', 'rejected' => 'Rejected', 'void' => 'Void'],
     'search' => 'Search',
     'searchPh' => 'Search by number',
     'quotaLeft' => 'You have {0} quotes left in your plan.',
@@ -61,14 +61,14 @@ return [
     'previewNote' => '(the official amount is calculated on save)',
     'notes' => 'Notes and terms',
     'notesPh' => 'Prices in Colombian pesos. Payment: 50% upfront.',
-    'actions' => ['draft' => 'Back to draft', 'sent' => 'Mark as sent', 'accepted' => 'Record acceptance', 'rejected' => 'Record rejection'],
-    'confirm' => [
+    'actions' => [ 'expired' => 'Mark expired','draft' => 'Back to draft', 'sent' => 'Mark as sent', 'accepted' => 'Record acceptance', 'rejected' => 'Record rejection'],
+    'confirm' => [ 'expired' => 'Mark the quote as expired?',
         'draft' => 'Move back to draft to edit it?',
         'sent' => 'Mark as sent? The public link for the client becomes available.',
         'accepted' => 'Record that the client accepted the quote?',
         'rejected' => 'Record that the client rejected the quote?',
     ],
-    'moved' => ['draft' => 'Quote moved back to draft.', 'sent' => 'Quote sent.', 'accepted' => 'Acceptance recorded. Remember to mark the opportunity as won.', 'rejected' => 'Rejection recorded.', 'void' => 'Quote voided.'],
+    'moved' => [ 'expired' => 'Quote expired.','draft' => 'Quote moved back to draft.', 'sent' => 'Quote sent.', 'accepted' => 'Acceptance recorded: the opportunity was marked as won with the quoted amount.', 'rejected' => 'Rejection recorded.', 'void' => 'Quote voided.'],
     'activity' => ['sent' => 'Quote {0} sent for {1}.', 'accepted' => 'Quote {0} accepted ({1}).', 'rejected' => 'Quote {0} rejected ({1}).'],
 
     'catalogHelp' => 'Services your business sells, with price, tax and billing period. Used in quotes.',
@@ -106,4 +106,5 @@ return [
         'line' => 'Check line {0}: description, quantity above 0, valid price and VAT.',
         'lineService' => 'The service on line {0} does not exist in your catalog.',
     ],
+    'followUp' => ['expired' => 'Quote {0} expired without an answer: contact the client.', 'expiring' => 'Quote {0} expires on {1}: follow up.'],
 ];

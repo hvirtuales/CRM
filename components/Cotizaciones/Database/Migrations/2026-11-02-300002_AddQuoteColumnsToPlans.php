@@ -8,7 +8,8 @@ class AddQuoteColumnsToPlans extends Migration
 {
     public function up(): void
     {
-        if (! $this->db->tableExists('plans')) {
+        $this->db->resetDataCache(); // la caché de tablas/columnas del driver puede estar obsoleta
+        if (! $this->db->tableExists('plans', false)) {
             return;
         }
         $fields = [];
@@ -25,7 +26,7 @@ class AddQuoteColumnsToPlans extends Migration
 
     public function down(): void
     {
-        if (! $this->db->tableExists('plans')) {
+        if (! $this->db->tableExists('plans', false)) {
             return;
         }
         foreach (['quote_enabled', 'max_quotes'] as $col) {

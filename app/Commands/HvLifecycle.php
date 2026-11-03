@@ -15,7 +15,7 @@ class HvLifecycle extends BaseCommand
 {
     protected $group       = 'HV CRM';
     protected $name        = 'hv:lifecycle';
-    protected $description = 'Aplica el ciclo de vida de suscripciones (past_due, suspensión).';
+    protected $description = 'Tareas comerciales diarias: ciclo de suscripciones, oportunidades de renovación/ampliación, extractos de comisiones y tareas de componentes.';
 
     public function run(array $params)
     {
@@ -27,8 +27,14 @@ class HvLifecycle extends BaseCommand
 
             return EXIT_ERROR;
         }
-        $stats = Services::subscriptions()->runLifecycle();
-        CLI::write(json_encode(['at' => gmdate('c')] + $stats));
+        $now    = time();
+        $report = (object) ['now' => $now, 'results' => []];
+        $report->results['subscriptions'] = Services::subscriptions()->runLifecycle($now);
+        $report->results['commercial']    = (new \App\Libraries\CommercialAutomation())->run($now);
+        $report->results['commissions']   = (new \App\Libraries\CommissionService())->settleClosedMonths($now);
+        // Los componentes agregan sus tareas diarias (p. ej. vencimiento de cotizaciones).
+        \CodeIgniter\Events\Events::trigger('hv.daily', $report);
+        CLI::write(json_encode(['at' => gmdate('c', $now)] + $report->results, JSON_UNESCAPED_UNICODE));
         flock($fh, LOCK_UN);
 
         return EXIT_SUCCESS;

@@ -8,7 +8,7 @@ return [
     'code'          => 'crm',
     'name'          => 'CRM comercial',
     'name_key'      => 'Crm.componentName',
-    'version'       => '1.0.0',
+    'version'       => '1.1.0',
     'description'   => 'Contactos, proyectos, embudo de oportunidades y actividades de seguimiento.',
     'author'        => 'Herramientas Virtuales CO S.A.S.',
     'requires_core' => '1.0.0',
@@ -36,6 +36,7 @@ return [
     ],
 
     'menus'         => [
+        ['label' => 'Seguimiento', 'label_key' => 'Crm.menuFollowUp', 'icon' => 'icon-activity', 'route' => 'crm/seguimiento', 'permission' => 'crm.view', 'order' => 5],
         ['label' => 'Oportunidades', 'label_key' => 'Crm.menuPipeline', 'icon' => 'icon-kanban', 'route' => 'crm/oportunidades', 'permission' => 'crm.view', 'order' => 10],
         ['label' => 'Contactos', 'label_key' => 'Crm.menuContacts', 'icon' => 'icon-contact', 'route' => 'crm/contactos', 'permission' => 'crm.view', 'order' => 20],
         ['label' => 'Proyectos y etapas', 'label_key' => 'Crm.menuSetup', 'icon' => 'icon-folder-kanban', 'route' => 'crm/configuracion', 'permission' => 'crm.configure', 'order' => 90],

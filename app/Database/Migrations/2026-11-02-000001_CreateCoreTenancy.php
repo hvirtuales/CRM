@@ -19,7 +19,7 @@ class CreateCoreTenancy extends Migration
             'updated_at' => ['type' => 'DATETIME', 'null' => true],
         ];
 
-        if (! $this->db->tableExists('plans')) {
+        if (! $this->db->tableExists('plans', false)) {
             $this->forge->addField([
                 'id'             => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
                 'code'           => ['type' => 'VARCHAR', 'constraint' => 40],
@@ -39,7 +39,7 @@ class CreateCoreTenancy extends Migration
             $this->forge->createTable('plans', true);
         }
 
-        if (! $this->db->tableExists('users')) {
+        if (! $this->db->tableExists('users', false)) {
             $this->forge->addField([
                 'id'                   => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
                 'public_id'            => ['type' => 'VARCHAR', 'constraint' => 32],
@@ -62,7 +62,7 @@ class CreateCoreTenancy extends Migration
             $this->forge->createTable('users', true);
         }
 
-        if (! $this->db->tableExists('tenants')) {
+        if (! $this->db->tableExists('tenants', false)) {
             $this->forge->addField([
                 'id'              => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
                 'public_id'       => ['type' => 'VARCHAR', 'constraint' => 32],
@@ -82,7 +82,7 @@ class CreateCoreTenancy extends Migration
             $this->forge->createTable('tenants', true);
         }
 
-        if (! $this->db->tableExists('companies')) {
+        if (! $this->db->tableExists('companies', false)) {
             $this->forge->addField([
                 'id'         => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
                 'public_id'  => ['type' => 'VARCHAR', 'constraint' => 32],
@@ -108,7 +108,7 @@ class CreateCoreTenancy extends Migration
             $this->forge->createTable('companies', true);
         }
 
-        if (! $this->db->tableExists('company_transfers')) {
+        if (! $this->db->tableExists('company_transfers', false)) {
             // Historial de traslados de negocio entre distribuidores (operación privilegiada).
             $this->forge->addField([
                 'id'             => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],

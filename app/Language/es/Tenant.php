@@ -24,4 +24,9 @@ return [
     'previewHelp' => 'Así se ven los elementos con el color guardado. Guarde para ver el cambio.',
     'previewPrimary' => 'Acción principal',
     'previewSecondary' => 'Secundaria',
+    'settlementsEmpty' => 'Aún no hay extractos. Al cerrar cada mes se genera el extracto con sus comisiones aprobadas.',
+    'settlementLine' => '{0} comisión(es) · pagado: {1}',
+    'downloadStatement' => 'Descargar extracto',
+    'signalsTitle' => 'Oportunidades de su cartera',
+    'signalsEmpty' => 'Sin renovaciones próximas, pruebas por vencer ni negocios cerca del límite de su plan.',
 ];

@@ -27,13 +27,14 @@ código se registra al sincronizar; el panel alerta si cambió fuera del desplie
 - `name_key`, `label_key`: claves de idioma para nombre y menús (i18n completo).
 - `role_grants`: permisos del componente concedidos a roles de negocio (además de propietario y admin).
 - Interfaz pública entre componentes por servicios: `crmLeads()->capture()`, `crmContacts()->summaries()`,
-  `crmOpportunities()->titles()/openOptions()/log()`, `crmSetup()->projectOf()`.
+  `crmOpportunities()->titles()/openOptions()/log()/closeWon()/scheduleFollowUp()`, `crmAssignment()`, `crmFollowUp()`;
+  evento diario `hv.daily` (los componentes registran sus tareas en `Config/Events.php`), `crmSetup()->projectOf()`.
 
 ## Componentes incluidos
 
 | code | Carpeta | Depende | Plan | Permisos |
 |---|---|---|---|---|
-| `crm` | `Crm` | — | `crm_enabled`, `max_contacts`, `max_opportunities` | view, create, edit, delete, manage, configure, export |
+| `crm` (1.1.0: reparto por proyecto, seguimiento) | `Crm` | — | `crm_enabled`, `max_contacts`, `max_opportunities` | view, create, edit, delete, manage, configure, export |
 | `form` | `Formularios` | crm | `form_enabled`, `max_forms` | view, create, edit, delete |
 | `quote` | `Cotizaciones` | crm | `quote_enabled`, `max_quotes` | view, create, edit, delete, configure |
 

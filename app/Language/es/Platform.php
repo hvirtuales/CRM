@@ -140,4 +140,10 @@ return [
     'hoursHint' => 'Máximo {0} horas desde la aprobación.',
     'expiresAt' => 'Vence',
     'useApprovedAccess' => 'Usar un acceso aprobado',
+    'settlements' => 'Extractos mensuales',
+    'settlementsEmpty' => 'Aún no hay extractos. Se generan automáticamente al cerrar cada mes con las comisiones aprobadas.',
+    'settlementPeriod' => 'Mes',
+    'commissionsCount' => 'Comisiones',
+    'confirmSettlementPaid' => '¿Registrar el pago del extracto completo al distribuidor? Todas sus comisiones quedarán pagadas.',
+    'settlementRefPh' => 'Referencia del pago',
 ];

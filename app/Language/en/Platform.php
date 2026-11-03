@@ -140,4 +140,10 @@ return [
     'hoursHint' => 'Maximum {0} hours from approval.',
     'expiresAt' => 'Expires',
     'useApprovedAccess' => 'Use an approved access',
+    'settlements' => 'Monthly statements',
+    'settlementsEmpty' => 'No statements yet. They are generated automatically when each month closes, with the approved commissions.',
+    'settlementPeriod' => 'Month',
+    'commissionsCount' => 'Commissions',
+    'confirmSettlementPaid' => 'Record the payout of the whole statement to the distributor? All its commissions will be marked as paid.',
+    'settlementRefPh' => 'Payment reference',
 ];

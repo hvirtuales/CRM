@@ -22,7 +22,11 @@ class Dashboard extends BaseController
             $mrr[$r['currency']] = ($mrr[$r['currency']] ?? 0) + ($r['billing_period'] === 'yearly' ? (float) $r['total'] / 12 : (float) $r['total']);
         }
 
+        $portfolio = $db->table('companies')->where('tenant_id', $tid)->where('deleted_at', null)->get(300)->getResultArray();
+        $signals   = (new \App\Libraries\CommercialAutomation())->signalsFor($portfolio);
+
         return view('tenant/dashboard', [
+            'signals'     => $signals,
             'companies'   => $db->table('companies')->where('tenant_id', $tid)->where('status', 'active')->where('deleted_at', null)->countAllResults(),
             'trials'      => $db->table('subscriptions')->where('sold_by_tenant_id', $tid)->where('status', 'trial')->countAllResults(),
             'pastDue'     => $db->table('subscriptions')->where('sold_by_tenant_id', $tid)->where('status', 'past_due')->countAllResults(),

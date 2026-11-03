@@ -11,6 +11,7 @@ class AddMfaReplayGuard extends Migration
 {
     public function up(): void
     {
+        $this->db->resetDataCache(); // la caché de tablas/columnas del driver puede estar obsoleta
         $fields = [];
         if (! $this->db->fieldExists('mfa_last_step', 'users')) {
             $fields['mfa_last_step'] = ['type' => 'BIGINT', 'null' => true];

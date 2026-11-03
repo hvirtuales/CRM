@@ -17,7 +17,7 @@ class CreateCoreBilling extends Migration
             'updated_at' => ['type' => 'DATETIME', 'null' => true],
         ];
 
-        if (! $this->db->tableExists('subscriptions')) {
+        if (! $this->db->tableExists('subscriptions', false)) {
             $this->forge->addField([
                 'id'                 => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
                 'subscriber_type'    => ['type' => 'VARCHAR', 'constraint' => 10], // company|tenant
@@ -45,7 +45,7 @@ class CreateCoreBilling extends Migration
             $this->forge->createTable('subscriptions', true);
         }
 
-        if (! $this->db->tableExists('payments')) {
+        if (! $this->db->tableExists('payments', false)) {
             $this->forge->addField([
                 'id'              => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
                 'subscription_id' => ['type' => 'INT', 'unsigned' => true],
@@ -66,7 +66,7 @@ class CreateCoreBilling extends Migration
             $this->forge->createTable('payments', true);
         }
 
-        if (! $this->db->tableExists('commissions')) {
+        if (! $this->db->tableExists('commissions', false)) {
             $this->forge->addField([
                 'id'          => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
                 'tenant_id'   => ['type' => 'INT', 'unsigned' => true],

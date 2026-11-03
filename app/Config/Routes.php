@@ -60,6 +60,7 @@ $routes->group('plataforma', ['namespace' => 'App\Controllers\Platform', 'filter
 
     $routes->get('comisiones', 'Commissions::index', ['filter' => 'permission:platform.commissions.view']);
     $routes->post('comisiones/(:num)/estado', 'Commissions::status/$1', ['filter' => 'permission:platform.commissions.edit']);
+    $routes->post('comisiones/extractos/(:num)/pagar', 'Commissions::paySettlement/$1', ['filter' => 'permission:platform.commissions.edit']);
 
     $routes->get('componentes', 'Components::index', ['filter' => 'permission:platform.components.view']);
     $routes->post('componentes/(:segment)/estado', 'Components::status/$1', ['filter' => 'permission:platform.components.edit']);
@@ -83,6 +84,7 @@ $routes->group('distribuidor', ['namespace' => 'App\Controllers\Tenant', 'filter
     $routes->post('negocios/(:num)/plan', 'Companies::plan/$1', ['filter' => 'permission:tenant.subscriptions.edit']);
     $routes->get('suscripciones', 'Subscriptions::index', ['filter' => 'permission:tenant.subscriptions.view']);
     $routes->get('comisiones', 'Commissions::index', ['filter' => 'permission:tenant.commissions.view']);
+    $routes->get('comisiones/extractos/(:num)', 'Commissions::statement/$1', ['filter' => 'permission:tenant.commissions.view']);
     $routes->get('equipo', 'Team::index', ['filter' => 'permission:tenant.users.view']);
     $routes->post('equipo', 'Team::store', ['filter' => 'permission:tenant.users.edit']);
     $routes->post('equipo/(:num)', 'Team::update/$1', ['filter' => 'permission:tenant.users.edit']);

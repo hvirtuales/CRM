@@ -11,7 +11,7 @@ class CreateCoreAudit extends Migration
 {
     public function up(): void
     {
-        if (! $this->db->tableExists('audit_events')) {
+        if (! $this->db->tableExists('audit_events', false)) {
             $this->forge->addField([
                 'id'            => ['type' => 'BIGINT', 'unsigned' => true, 'auto_increment' => true],
                 'occurred_at'   => ['type' => 'DATETIME'],
@@ -34,7 +34,7 @@ class CreateCoreAudit extends Migration
             $this->forge->createTable('audit_events', true);
         }
 
-        if (! $this->db->tableExists('login_attempts')) {
+        if (! $this->db->tableExists('login_attempts', false)) {
             $this->forge->addField([
                 'id'         => ['type' => 'BIGINT', 'unsigned' => true, 'auto_increment' => true],
                 'email_hash' => ['type' => 'VARCHAR', 'constraint' => 64],
@@ -48,7 +48,7 @@ class CreateCoreAudit extends Migration
             $this->forge->createTable('login_attempts', true);
         }
 
-        if (! $this->db->tableExists('components')) {
+        if (! $this->db->tableExists('components', false)) {
             $this->forge->addField([
                 'id'           => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
                 'code'         => ['type' => 'VARCHAR', 'constraint' => 8],

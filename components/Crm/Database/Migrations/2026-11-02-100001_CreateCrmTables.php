@@ -16,7 +16,7 @@ class CreateCrmTables extends Migration
             'updated_at' => ['type' => 'DATETIME', 'null' => true],
         ];
 
-        if (! $this->db->tableExists('cmp_crm_projects')) {
+        if (! $this->db->tableExists('cmp_crm_projects', false)) {
             $this->forge->addField([
                 'id'          => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
                 'company_id'  => ['type' => 'INT', 'unsigned' => true],
@@ -32,7 +32,7 @@ class CreateCrmTables extends Migration
             $this->forge->createTable('cmp_crm_projects', true);
         }
 
-        if (! $this->db->tableExists('cmp_crm_stages')) {
+        if (! $this->db->tableExists('cmp_crm_stages', false)) {
             $this->forge->addField([
                 'id'          => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
                 'company_id'  => ['type' => 'INT', 'unsigned' => true],
@@ -47,7 +47,7 @@ class CreateCrmTables extends Migration
             $this->forge->createTable('cmp_crm_stages', true);
         }
 
-        if (! $this->db->tableExists('cmp_crm_contacts')) {
+        if (! $this->db->tableExists('cmp_crm_contacts', false)) {
             $this->forge->addField([
                 'id'               => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
                 'company_id'       => ['type' => 'INT', 'unsigned' => true],
@@ -77,7 +77,7 @@ class CreateCrmTables extends Migration
             $this->forge->createTable('cmp_crm_contacts', true);
         }
 
-        if (! $this->db->tableExists('cmp_crm_opportunities')) {
+        if (! $this->db->tableExists('cmp_crm_opportunities', false)) {
             $this->forge->addField([
                 'id'                  => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
                 'company_id'          => ['type' => 'INT', 'unsigned' => true],
@@ -109,7 +109,7 @@ class CreateCrmTables extends Migration
             $this->forge->createTable('cmp_crm_opportunities', true);
         }
 
-        if (! $this->db->tableExists('cmp_crm_activities')) {
+        if (! $this->db->tableExists('cmp_crm_activities', false)) {
             $this->forge->addField([
                 'id'             => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
                 'company_id'     => ['type' => 'INT', 'unsigned' => true],

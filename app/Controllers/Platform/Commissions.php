@@ -25,9 +25,18 @@ class Commissions extends BaseController
         }
 
         return view('platform/commissions', $this->paginate($b->orderBy('m.id', 'DESC')) + [
+            'settlements' => (new \App\Libraries\CommissionService())->settlements(),
             'status' => $status, 'tenant' => $tenant,
             'tenants' => db_connect()->table('tenants')->select('id, name')->orderBy('name')->get()->getResultArray(),
         ]);
+    }
+
+    public function paySettlement(int $id)
+    {
+        return $this->afterResult(
+            (new \App\Libraries\CommissionService())->markSettlementPaid($id, (string) $this->request->getPost('reference'), $this->actorId()),
+            'plataforma/comisiones'
+        );
     }
 
     public function status(int $id)

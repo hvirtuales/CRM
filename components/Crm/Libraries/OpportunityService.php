@@ -109,10 +109,10 @@ class OpportunityService
         $clean['stage_id']    = (int) $stage['id'];
         $clean['probability'] = (int) $stage['probability'];
         // Asignar a otro asesor al crear también es gestionar registros ajenos.
-        if (! isset($clean['owner_user_id']) || ((int) $clean['owner_user_id'] !== $actorId && ! auth_can('crm.manage') && $source !== 'form')) {
+        if (! isset($clean['owner_user_id']) || ((int) $clean['owner_user_id'] !== $actorId && ! auth_can('crm.manage') && ! in_array($source, ['form', 'automation'], true))) {
             $clean['owner_user_id'] = $actorId;
         }
-        $clean += ['company_id' => $companyId, 'source' => $source];
+        $clean += ['company_id' => $companyId, 'source' => $source, 'last_activity_at' => date('Y-m-d H:i:s')];
 
         $model = new OpportunityModel();
         $model->insert($clean);
@@ -221,6 +221,47 @@ class OpportunityService
             ->orderBy('a.id', 'DESC')->get(100)->getResultArray();
     }
 
+    /**
+     * Interfaz pública: cierra como GANADA con el valor real (p. ej. cotización aceptada).
+     * El llamador ya validó que el actor puede gestionar la oportunidad.
+     */
+    public function closeWon(int $companyId, int $id, string $amount, string $currency, int $actorId, string $note): Result
+    {
+        $opp = $this->find($companyId, $id);
+        if (! $opp) {
+            return Result::notFound();
+        }
+        $won = $this->setup->stageOfKind($companyId, 'won');
+        if (! $won) {
+            return Result::fail(lang('Crm.validation.stage'));
+        }
+        (new OpportunityModel())->update($id, ['amount' => $amount, 'currency' => $currency]);
+        $this->log($companyId, $id, (int) $opp['contact_id'], $actorId, 'system', $note);
+        if ((int) $opp['stage_id'] === (int) $won['id']) {
+            return Result::success(['id' => $id]);
+        }
+        // Mover en nombre del responsable (la regla ABAC ya se aplicó en el componente que llama).
+        return $this->move($companyId, $id, (int) $won['id'], (int) $opp['owner_user_id'] ?: $actorId);
+    }
+
+    /**
+     * Interfaz pública: programa una próxima acción si no hay otra más próxima (idempotente).
+     */
+    public function scheduleFollowUp(int $companyId, int $id, string $text, int $at): Result
+    {
+        $opp = $this->find($companyId, $id);
+        if (! $opp) {
+            return Result::notFound();
+        }
+        $current = $opp['next_action_at'] ? strtotime((string) $opp['next_action_at']) : null;
+        if ($current === null || $current > $at) {
+            (new OpportunityModel())->update($id, ['next_action' => mb_substr($text, 0, 190), 'next_action_at' => date('Y-m-d H:i:s', $at)]);
+        }
+        $this->log($companyId, $id, (int) $opp['contact_id'], null, 'system', $text);
+
+        return Result::success(['id' => $id]);
+    }
+
     /** ¿Puede el actor modificar esta oportunidad? (propia, o crm.manage) */
     public function canTouch(array $opp, int $actorId): bool
     {
@@ -233,6 +274,11 @@ class OpportunityService
             'company_id' => $companyId, 'opportunity_id' => $oppId, 'contact_id' => $contactId,
             'user_id' => $userId, 'type' => $type, 'body' => $body,
         ]);
+        // Solo la gestión humana reinicia el reloj de «sin actividad» (los avisos del sistema no).
+        if ($oppId !== null && $userId !== null) {
+            db_connect()->table('cmp_crm_opportunities')->where('id', $oppId)->where('company_id', $companyId)
+                ->update(['last_activity_at' => date('Y-m-d H:i:s')]);
+        }
     }
 
     /**

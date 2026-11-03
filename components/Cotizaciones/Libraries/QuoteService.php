@@ -13,7 +13,8 @@ class QuoteService
 {
     public const TRANSITIONS = [
         'draft'    => ['sent', 'void'],
-        'sent'     => ['accepted', 'rejected', 'void', 'draft'],
+        'sent'     => ['accepted', 'rejected', 'void', 'draft', 'expired'],
+        'expired'  => ['draft', 'void'],
         'accepted' => [],
         'rejected' => ['draft'],
         'void'     => [],
@@ -187,13 +188,54 @@ class QuoteService
         }
         db_connect()->table('cmp_quote_quotes')->where('id', $id)->where('company_id', $companyId)->update($data);
 
-        if ($q['opportunity_id'] && in_array($to, ['sent', 'accepted', 'rejected'], true)) {
+        if ($to === 'accepted' && $q['opportunity_id']) {
+            // Automatización: la aceptación cierra la oportunidad como ganada con el valor real cotizado.
+            service('crmOpportunities')->closeWon($companyId, (int) $q['opportunity_id'], (string) $q['total'], (string) $q['currency'], $actorId,
+                lang('Quote.activity.accepted', [$q['number'], money($q['total'], $q['currency'])]));
+        } elseif ($q['opportunity_id'] && in_array($to, ['sent', 'rejected'], true)) {
             service('crmOpportunities')->log($companyId, (int) $q['opportunity_id'], $q['contact_id'] ? (int) $q['contact_id'] : null, $actorId, 'system',
                 lang('Quote.activity.' . $to, [$q['number'], money($q['total'], $q['currency'])]));
         }
         Services::audit()->log('quote.' . $to, 'quote', $id, [], $companyId);
 
         return Result::success(null, lang('Quote.moved.' . $to));
+    }
+
+    /**
+     * Tarea diaria (evento hv.daily): vence cotizaciones enviadas cuya validez pasó y programa un
+     * recordatorio en la oportunidad 3 días antes del vencimiento. Idempotente (reminded_at).
+     *
+     * @return array{expired:int, reminded:int}
+     */
+    public function runDaily(?int $now = null): array
+    {
+        $now   = $now ?? time();
+        $db    = db_connect();
+        $today = date('Y-m-d', $now);
+        $stats = ['expired' => 0, 'reminded' => 0];
+
+        foreach ($db->table('cmp_quote_quotes')->where('status', 'sent')->where('deleted_at', null)->where('valid_until <', $today)->get()->getResultArray() as $q) {
+            $db->table('cmp_quote_quotes')->where('id', $q['id'])->update(['status' => 'expired', 'updated_at' => date('Y-m-d H:i:s', $now)]);
+            if ($q['opportunity_id']) {
+                service('crmOpportunities')->scheduleFollowUp((int) $q['company_id'], (int) $q['opportunity_id'],
+                    lang('Quote.followUp.expired', [$q['number']]), $now);
+            }
+            Services::audit()->log('quote.expired', 'quote', (int) $q['id'], [], (int) $q['company_id']);
+            $stats['expired']++;
+        }
+
+        $limit = date('Y-m-d', $now + 3 * 86400);
+        foreach ($db->table('cmp_quote_quotes')->where('status', 'sent')->where('deleted_at', null)->where('reminded_at', null)
+            ->where('valid_until >=', $today)->where('valid_until <=', $limit)->get()->getResultArray() as $q) {
+            if ($q['opportunity_id']) {
+                service('crmOpportunities')->scheduleFollowUp((int) $q['company_id'], (int) $q['opportunity_id'],
+                    lang('Quote.followUp.expiring', [$q['number'], $q['valid_until']]), $now);
+            }
+            $db->table('cmp_quote_quotes')->where('id', $q['id'])->update(['reminded_at' => date('Y-m-d H:i:s', $now)]);
+            $stats['reminded']++;
+        }
+
+        return $stats;
     }
 
     /**

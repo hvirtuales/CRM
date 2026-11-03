@@ -25,5 +25,16 @@
     </div>
   </div>
 </div>
+<div class="card mt-4">
+  <div class="card-header"><h2 class="card-title"><?= lang('Tenant.signalsTitle') ?></h2><span class="text-sm font-semibold <?= $signals ? 'text-warn' : 'text-ink-soft' ?>"><?= count($signals) ?></span></div>
+  <?php if ($signals === []): ?><p class="card-body text-sm text-ink-soft"><?= lang('Tenant.signalsEmpty') ?></p><?php else: ?>
+  <ul class="divide-y divide-line"><?php foreach ($signals as $s): ?>
+    <li class="flex flex-wrap items-center justify-between gap-3 px-4 py-2.5">
+      <span class="min-w-0"><span class="block font-medium"><?= esc($s['company']['name']) ?></span><span class="block truncate text-xs text-ink-soft"><?= esc($s['detail']) ?></span></span>
+      <span class="flex items-center gap-2"><?= status_badge($s['kind'] === 'upsell' ? 'open' : 'pending', lang('Commercial.kind.' . $s['kind'])) ?>
+        <?php if (auth_can('tenant.subscriptions.edit')): ?><a class="btn btn-ghost btn-sm" href="<?= site_url('distribuidor/negocios?edit=' . (int) $s['company']['id']) ?>"><?= lang('Core.manage') ?></a><?php endif ?></span>
+    </li>
+  <?php endforeach ?></ul><?php endif ?>
+</div>
 <p class="mt-4 text-xs text-ink-soft"><?= lang('Tenant.privacyNote') ?></p>
 <?= $this->endSection() ?>

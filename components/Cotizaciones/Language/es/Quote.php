@@ -23,7 +23,7 @@ return [
     'taxes' => 'Impuestos',
     'status' => 'Estado',
     'all' => 'Todas',
-    'statuses' => ['draft' => 'Borrador', 'sent' => 'Enviada', 'accepted' => 'Aceptada', 'rejected' => 'Rechazada', 'void' => 'Anulada'],
+    'statuses' => [ 'expired' => 'Expirada','draft' => 'Borrador', 'sent' => 'Enviada', 'accepted' => 'Aceptada', 'rejected' => 'Rechazada', 'void' => 'Anulada'],
     'search' => 'Buscar',
     'searchPh' => 'Buscar por número',
     'quotaLeft' => 'Le quedan {0} cotizaciones en su plan.',
@@ -61,14 +61,14 @@ return [
     'previewNote' => '(el valor oficial se calcula al guardar)',
     'notes' => 'Notas y condiciones',
     'notesPh' => 'Precios en pesos colombianos. Forma de pago: 50 % anticipo.',
-    'actions' => ['draft' => 'Volver a borrador', 'sent' => 'Marcar enviada', 'accepted' => 'Registrar aceptación', 'rejected' => 'Registrar rechazo'],
-    'confirm' => [
+    'actions' => [ 'expired' => 'Marcar expirada','draft' => 'Volver a borrador', 'sent' => 'Marcar enviada', 'accepted' => 'Registrar aceptación', 'rejected' => 'Registrar rechazo'],
+    'confirm' => [ 'expired' => '¿Marcar la cotización como expirada?',
         'draft' => '¿Devolver a borrador para editarla?',
         'sent' => '¿Marcar como enviada? Se habilita el enlace público para el cliente.',
         'accepted' => '¿Registrar que el cliente aceptó la cotización?',
         'rejected' => '¿Registrar que el cliente rechazó la cotización?',
     ],
-    'moved' => ['draft' => 'Cotización devuelta a borrador.', 'sent' => 'Cotización enviada.', 'accepted' => 'Aceptación registrada. Recuerde marcar la oportunidad como ganada.', 'rejected' => 'Rechazo registrado.', 'void' => 'Cotización anulada.'],
+    'moved' => [ 'expired' => 'Cotización expirada.','draft' => 'Cotización devuelta a borrador.', 'sent' => 'Cotización enviada.', 'accepted' => 'Aceptación registrada: la oportunidad quedó ganada con el valor cotizado.', 'rejected' => 'Rechazo registrado.', 'void' => 'Cotización anulada.'],
     'activity' => ['sent' => 'Cotización {0} enviada por {1}.', 'accepted' => 'Cotización {0} aceptada ({1}).', 'rejected' => 'Cotización {0} rechazada ({1}).'],
 
     'catalogHelp' => 'Servicios que vende su negocio, con precio, impuesto y periodicidad. Se usan en las cotizaciones.',
@@ -106,4 +106,5 @@ return [
         'line' => 'Revise la línea {0}: descripción, cantidad mayor a 0, valor e IVA válidos.',
         'lineService' => 'El servicio de la línea {0} no existe en su catálogo.',
     ],
+    'followUp' => ['expired' => 'La cotización {0} venció sin respuesta: contacte al cliente.', 'expiring' => 'La cotización {0} vence el {1}: haga seguimiento.'],
 ];

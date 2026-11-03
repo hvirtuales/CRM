@@ -32,6 +32,16 @@ class Services extends BaseService
         return $getShared ? static::getSharedInstance('crmPlanGuard') : new PlanGuard();
     }
 
+    public static function crmAssignment(bool $getShared = true): \Components\Crm\Libraries\AssignmentService
+    {
+        return $getShared ? static::getSharedInstance('crmAssignment') : new \Components\Crm\Libraries\AssignmentService();
+    }
+
+    public static function crmFollowUp(bool $getShared = true): \Components\Crm\Libraries\FollowUpService
+    {
+        return $getShared ? static::getSharedInstance('crmFollowUp') : new \Components\Crm\Libraries\FollowUpService();
+    }
+
     /** Interfaz pública para otros componentes. */
     public static function crmLeads(bool $getShared = true): LeadCapture
     {

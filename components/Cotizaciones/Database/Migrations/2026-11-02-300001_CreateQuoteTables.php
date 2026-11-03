@@ -10,7 +10,7 @@ class CreateQuoteTables extends Migration
     {
         $ts = ['created_at' => ['type' => 'DATETIME', 'null' => true], 'updated_at' => ['type' => 'DATETIME', 'null' => true]];
 
-        if (! $this->db->tableExists('cmp_quote_services')) {
+        if (! $this->db->tableExists('cmp_quote_services', false)) {
             $this->forge->addField([
                 'id'          => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
                 'company_id'  => ['type' => 'INT', 'unsigned' => true],
@@ -30,7 +30,7 @@ class CreateQuoteTables extends Migration
             $this->forge->createTable('cmp_quote_services', true);
         }
 
-        if (! $this->db->tableExists('cmp_quote_quotes')) {
+        if (! $this->db->tableExists('cmp_quote_quotes', false)) {
             $this->forge->addField([
                 'id'             => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
                 'company_id'     => ['type' => 'INT', 'unsigned' => true],
@@ -59,7 +59,7 @@ class CreateQuoteTables extends Migration
             $this->forge->createTable('cmp_quote_quotes', true);
         }
 
-        if (! $this->db->tableExists('cmp_quote_lines')) {
+        if (! $this->db->tableExists('cmp_quote_lines', false)) {
             $this->forge->addField([
                 'id'          => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
                 'company_id'  => ['type' => 'INT', 'unsigned' => true],

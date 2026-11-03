@@ -22,6 +22,11 @@ class LeadCapture
         $phone    = ContactService::normalizePhone($contact['phone'] ?? null);
         $existing = $contacts->findDuplicate($companyId, $email ?: null, $phone);
         $consent  = ! empty($options['consent']);
+        $project  = isset($options['project_id']) && (int) $options['project_id'] > 0
+            && (new SetupService())->projectOf($companyId, (int) $options['project_id']) ? (int) $options['project_id'] : null;
+        $wantsOpp = ($options['create_opportunity'] ?? true) === true;
+        // Reparto automático por proyecto (AssignmentService): un solo responsable para contacto y oportunidad.
+        $owner    = (new AssignmentService())->nextOwner($companyId, $project);
 
         if ($existing) {
             $contactId = (int) $existing['id'];
@@ -33,7 +38,8 @@ class LeadCapture
             }
             $dedup = true;
         } else {
-            $r = $contacts->create($companyId, $contact + ['consent_marketing' => $consent ? 1 : 0, 'consent_source' => $options['consent_source'] ?? $source], null, $source);
+            $r = $contacts->create($companyId, $contact + ['consent_marketing' => $consent ? 1 : 0, 'consent_source' => $options['consent_source'] ?? $source]
+                + ($owner !== null ? ['owner_user_id' => (string) $owner] : []), null, $source);
             if (! $r->ok) {
                 return $r;
             }
@@ -42,17 +48,18 @@ class LeadCapture
         }
 
         $oppId = null;
-        if (($options['create_opportunity'] ?? true) === true) {
-            $owner = $this->defaultOwner($companyId);
+        if ($wantsOpp) {
             if ($owner !== null) {
                 $title = trim((string) ($options['title'] ?? '')) ?: lang('Crm.leadTitle', [$contacts->displayName($contacts->find($companyId, $contactId))]);
                 $r     = (new OpportunityService())->create($companyId, [
                     'title' => mb_substr($title, 0, 150), 'contact_id' => $contactId, 'amount' => $options['amount'] ?? '0',
-                    'project_id' => isset($options['project_id']) ? (string) $options['project_id'] : '',
+                    'project_id' => $project !== null ? (string) $project : '',
                     'owner_user_id' => (string) $owner,
                 ], $owner, $source);
                 if ($r->ok) {
                     $oppId = (int) $r->data['id'];
+                    $name  = (string) (db_connect()->table('users')->select('name')->where('id', $owner)->get()->getRow()->name ?? '');
+                    (new OpportunityService())->log($companyId, $oppId, $contactId, null, 'system', lang('Crm.autoAssigned', [$name]));
                 }
             }
         }
@@ -60,14 +67,4 @@ class LeadCapture
         return Result::success(['contact_id' => $contactId, 'opportunity_id' => $oppId, 'deduplicated' => $dedup]);
     }
 
-    /** Responsable por defecto: el propietario activo más antiguo del negocio. */
-    private function defaultOwner(int $companyId): ?int
-    {
-        $row = db_connect()->table('memberships m')->select('m.user_id')->join('roles r', 'r.id = m.role_id')
-            ->where('m.company_id', $companyId)->where('m.scope', 'company')->where('m.status', 'active')
-            ->orderBy("CASE WHEN r.code = 'business_owner' THEN 0 WHEN r.code = 'sales_manager' THEN 1 ELSE 2 END", '', false)
-            ->orderBy('m.id', 'ASC')->get(1)->getRowArray();
-
-        return $row ? (int) $row['user_id'] : null;
-    }
 }

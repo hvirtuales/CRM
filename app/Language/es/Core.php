@@ -182,4 +182,5 @@ return [
         'planRequired' => 'Elija el plan que comercializa a este negocio.',
         'abilities' => 'Elija al menos una habilidad.',
     ],
+    'settlementPaid' => 'Extracto marcado como pagado; sus comisiones quedaron pagadas.',
 ];

@@ -13,8 +13,12 @@ class Setup extends BaseController
 
         return view('Components\Crm\Views\setup\index', [
             'projects' => service('crmSetup')->projects($cid),
+            'teams'    => service('crmAssignment')->teamsByProject($cid),
+            'members'  => \Components\Crm\Libraries\Members::options($cid),
+            'followUp' => service('crmFollowUp')->settings($cid),
             'stages'   => service('crmSetup')->stages($cid),
             'editProject' => ($id = (int) $this->request->getGet('project')) ? service('crmSetup')->projectOf($cid, $id) : null,
+            'editTeam'    => ($id = (int) $this->request->getGet('project')) ? service('crmAssignment')->team($cid, $id) : [],
             'editStage'   => ($id = (int) $this->request->getGet('stage')) ? service('crmSetup')->stageOf($cid, $id) : null,
         ]);
     }
@@ -42,6 +46,16 @@ class Setup extends BaseController
     public function deleteStage(int $id)
     {
         return $this->done(service('crmSetup')->deleteStage((int) session('active_company_id'), $id));
+    }
+
+    public function team(int $id)
+    {
+        return $this->done(service('crmAssignment')->setTeam((int) session('active_company_id'), $id, (array) ($this->request->getPost('team') ?? [])));
+    }
+
+    public function followUpSettings()
+    {
+        return $this->done(service('crmFollowUp')->saveSettings((int) session('active_company_id'), $this->request->getPost()));
     }
 
     private function done(Result $r)

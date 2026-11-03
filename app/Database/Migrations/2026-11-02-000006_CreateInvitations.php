@@ -12,7 +12,7 @@ class CreateInvitations extends Migration
 {
     public function up(): void
     {
-        if ($this->db->tableExists('invitations')) {
+        if ($this->db->tableExists('invitations', false)) {
             return;
         }
         $this->forge->addField([

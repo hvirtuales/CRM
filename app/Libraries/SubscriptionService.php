@@ -202,7 +202,8 @@ class SubscriptionService
                     'tenant_id' => $sub['sold_by_tenant_id'], 'company_id' => $sub['company_id'], 'payment_id' => $paymentId,
                     'base_amount' => $amount, 'rate' => number_format($rate, 4, '.', ''),
                     'amount' => number_format(round((float) $amount * $rate, 2), 2, '.', ''),
-                    'currency' => $sub['currency'], 'status' => 'pending', 'created_at' => $now, 'updated_at' => $now,
+                    // Pago registrado = confirmado ⇒ comisión aprobada automáticamente (se liquida en el extracto mensual).
+                    'currency' => $sub['currency'], 'status' => 'approved', 'created_at' => $now, 'updated_at' => $now,
                 ]);
             }
         }

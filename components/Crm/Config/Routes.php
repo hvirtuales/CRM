@@ -4,6 +4,9 @@
 
 // Admin — sesión + permiso en CADA ruta; cambios de estado y borrados por POST + CSRF.
 $routes->group('crm', ['namespace' => 'Components\Crm\Controllers', 'filter' => 'auth'], static function ($routes) {
+    $routes->get('seguimiento', 'FollowUp::index', ['filter' => 'permission:crm.view']);
+    $routes->post('seguimiento/ajustes', 'Setup::followUpSettings', ['filter' => 'permission:crm.configure']);
+    $routes->post('proyectos/(:num)/equipo', 'Setup::team/$1', ['filter' => 'permission:crm.configure']);
     $routes->get('oportunidades', 'Opportunities::index', ['filter' => 'permission:crm.view']);
     $routes->post('oportunidades', 'Opportunities::store', ['filter' => 'permission:crm.create']);
     $routes->post('oportunidades/(:num)', 'Opportunities::update/$1', ['filter' => 'permission:crm.edit']);

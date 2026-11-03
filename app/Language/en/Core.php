@@ -179,4 +179,5 @@ return [
         'planRequired' => 'Choose the plan you are selling to this business.',
         'abilities' => 'Choose at least one ability.',
     ],
+    'settlementPaid' => 'Statement marked as paid; its commissions are now paid.',
 ];

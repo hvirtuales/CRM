@@ -16,7 +16,7 @@ class CreateCoreAccess extends Migration
             'updated_at' => ['type' => 'DATETIME', 'null' => true],
         ];
 
-        if (! $this->db->tableExists('roles')) {
+        if (! $this->db->tableExists('roles', false)) {
             $this->forge->addField([
                 'id'          => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
                 'code'        => ['type' => 'VARCHAR', 'constraint' => 60],
@@ -32,7 +32,7 @@ class CreateCoreAccess extends Migration
             $this->forge->createTable('roles', true);
         }
 
-        if (! $this->db->tableExists('permissions')) {
+        if (! $this->db->tableExists('permissions', false)) {
             $this->forge->addField([
                 'id'          => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
                 'code'        => ['type' => 'VARCHAR', 'constraint' => 100],
@@ -45,7 +45,7 @@ class CreateCoreAccess extends Migration
             $this->forge->createTable('permissions', true);
         }
 
-        if (! $this->db->tableExists('role_permissions')) {
+        if (! $this->db->tableExists('role_permissions', false)) {
             $this->forge->addField([
                 'id'            => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
                 'role_id'       => ['type' => 'INT', 'unsigned' => true],
@@ -58,7 +58,7 @@ class CreateCoreAccess extends Migration
             $this->forge->createTable('role_permissions', true);
         }
 
-        if (! $this->db->tableExists('memberships')) {
+        if (! $this->db->tableExists('memberships', false)) {
             $this->forge->addField([
                 'id'         => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
                 'user_id'    => ['type' => 'INT', 'unsigned' => true],
@@ -80,7 +80,7 @@ class CreateCoreAccess extends Migration
             $this->forge->createTable('memberships', true);
         }
 
-        if (! $this->db->tableExists('support_grants')) {
+        if (! $this->db->tableExists('support_grants', false)) {
             // Acceso temporal de soporte de plataforma a un negocio: justificado, aprobado por el negocio, con vencimiento.
             $this->forge->addField([
                 'id'           => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
@@ -101,7 +101,7 @@ class CreateCoreAccess extends Migration
             $this->forge->createTable('support_grants', true);
         }
 
-        if (! $this->db->tableExists('api_tokens')) {
+        if (! $this->db->tableExists('api_tokens', false)) {
             $this->forge->addField([
                 'id'            => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
                 'user_id'       => ['type' => 'INT', 'unsigned' => true],

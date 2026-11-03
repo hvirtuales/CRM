@@ -8,7 +8,7 @@ class CreateFormTables extends Migration
 {
     public function up(): void
     {
-        if (! $this->db->tableExists('cmp_form_forms')) {
+        if (! $this->db->tableExists('cmp_form_forms', false)) {
             $this->forge->addField([
                 'id'                 => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
                 'company_id'         => ['type' => 'INT', 'unsigned' => true],
@@ -37,7 +37,7 @@ class CreateFormTables extends Migration
             $this->forge->createTable('cmp_form_forms', true);
         }
 
-        if (! $this->db->tableExists('cmp_form_submissions')) {
+        if (! $this->db->tableExists('cmp_form_submissions', false)) {
             $this->forge->addField([
                 'id'              => ['type' => 'INT', 'unsigned' => true, 'auto_increment' => true],
                 'company_id'      => ['type' => 'INT', 'unsigned' => true],

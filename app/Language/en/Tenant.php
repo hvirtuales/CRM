@@ -24,4 +24,9 @@ return [
     'previewHelp' => 'This is how elements look with the saved color. Save to see the change.',
     'previewPrimary' => 'Primary action',
     'previewSecondary' => 'Secondary',
+    'settlementsEmpty' => 'No statements yet. When each month closes a statement is generated with your approved commissions.',
+    'settlementLine' => '{0} commission(s) · paid: {1}',
+    'downloadStatement' => 'Download statement',
+    'signalsTitle' => 'Opportunities in your portfolio',
+    'signalsEmpty' => 'No upcoming renewals, ending trials or businesses near their plan limits.',
 ];
