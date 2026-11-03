@@ -8,5 +8,6 @@
   <?= view('partials/field', ['name' => 'password', 'label' => lang('Auth.password'), 'type' => 'password', 'required' => true, 'attrs' => ['autocomplete' => 'current-password', 'maxlength' => 256]]) ?>
   <button type="submit" class="btn btn-primary btn-lg w-full" data-busy="<?= esc(lang('Auth.signingIn'), 'attr') ?>"><?= lang('Auth.signIn') ?></button>
   <p class="hint"><?= lang('Auth.loginHelp') ?></p>
+  <?php if (config('Commercial')->selfSignup): ?><p class="text-center text-sm"><a class="text-accent" href="<?= site_url('registro') ?>"><?= lang('Signup.cta') ?></a></p><?php endif ?>
 </form>
 <?= $this->endSection() ?>

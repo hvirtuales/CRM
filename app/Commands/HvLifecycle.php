@@ -30,10 +30,12 @@ class HvLifecycle extends BaseCommand
         $now    = time();
         $report = (object) ['now' => $now, 'results' => []];
         $report->results['subscriptions'] = Services::subscriptions()->runLifecycle($now);
+        $report->results['dunning']       = (new \App\Libraries\DunningService())->run($now);
         $report->results['commercial']    = (new \App\Libraries\CommercialAutomation())->run($now);
         $report->results['commissions']   = (new \App\Libraries\CommissionService())->settleClosedMonths($now);
         // Los componentes agregan sus tareas diarias (p. ej. vencimiento de cotizaciones).
         \CodeIgniter\Events\Events::trigger('hv.daily', $report);
+        $report->results['outbox'] = (new \App\Libraries\NotificationService())->deliverDue();
         CLI::write(json_encode(['at' => gmdate('c', $now)] + $report->results, JSON_UNESCAPED_UNICODE));
         flock($fh, LOCK_UN);
 

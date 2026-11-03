@@ -29,6 +29,7 @@ class Navigation extends BaseConfig
                 ['label' => 'Nav.components', 'route' => 'plataforma/componentes', 'icon' => 'puzzle', 'permission' => 'platform.components.view'],
                 ['label' => 'Nav.team', 'route' => 'plataforma/equipo', 'icon' => 'users', 'permission' => 'platform.users.view'],
                 ['label' => 'Nav.support', 'route' => 'plataforma/soporte', 'icon' => 'life-buoy', 'permission' => 'platform.support.request'],
+                ['label' => 'Nav.outbox', 'route' => 'plataforma/correos', 'icon' => 'mail', 'permission' => 'platform.notifications.view'],
                 ['label' => 'Nav.audit', 'route' => 'plataforma/auditoria', 'icon' => 'shield-check', 'permission' => 'platform.audit.view'],
             ]],
         ],

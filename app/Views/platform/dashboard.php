@@ -11,6 +11,11 @@
     <div class="kpi-hint"><?= lang('Platform.kpiMrrHint') ?></div></div>
   <div class="kpi"><div class="kpi-label"><?= lang('Platform.kpiPastDue') ?></div><div class="kpi-value <?= ($statusCounts['past_due'] ?? 0) > 0 ? 'text-warn' : '' ?>"><?= num($statusCounts['past_due'] ?? 0) ?></div><div class="kpi-hint"><?= lang('Platform.kpiSuspended', [num($statusCounts['suspended'] ?? 0)]) ?></div></div>
 </div>
+<?php if (! $emailConfigured || $failedMails > 0): ?>
+  <a href="<?= site_url('plataforma/correos') ?>" class="mt-4 flex items-center gap-3 rounded-xl border border-line bg-surface px-4 py-3 text-sm hover:bg-muted">
+    <?= icon('mail', 16, 'text-warn') ?><span class="flex-1"><?= ! $emailConfigured ? lang('Platform.alertEmailOff', [num($queuedMails)]) : lang('Platform.alertEmailFailed', [num($failedMails)]) ?></span><span class="text-accent"><?= lang('Core.review') ?></span>
+  </a>
+<?php endif ?>
 <?php if (($statusCounts['past_due'] ?? 0) > 0): ?>
   <a href="<?= site_url('plataforma/suscripciones?status=past_due') ?>" class="mt-4 flex items-center gap-3 rounded-xl border border-line bg-surface px-4 py-3 text-sm hover:bg-muted">
     <?= icon('triangle-alert', 16, 'text-warn') ?><span class="flex-1"><?= lang('Platform.alertPastDue', [num($statusCounts['past_due'])]) ?></span><span class="text-accent"><?= lang('Core.review') ?></span>

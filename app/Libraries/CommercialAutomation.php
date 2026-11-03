@@ -89,7 +89,7 @@ class CommercialAutomation
             return $stats;
         }
         $houseId   = (int) $house['id'];
-        $projectId = $this->houseProject($houseId);
+        $projectId = Rls::withCompany($houseId, fn () => $this->houseProject($houseId));
 
         $direct = $db->table('companies')->where('tenant_id', null)->where('id !=', $houseId)->where('deleted_at', null)->get()->getResultArray();
         foreach ($this->signalsFor($direct, $now) as $s) {
@@ -127,8 +127,27 @@ class CommercialAutomation
         return $stats;
     }
 
+    /**
+     * Registra un prospecto en el CRM de Herramientas Virtuales (p. ej. autorregistro de prueba).
+     */
+    public function captureHouseLead(string $companyName, string $personName, string $email, ?string $phone, string $title): ?int
+    {
+        $db    = db_connect();
+        $house = $db->table('companies')->where('slug', config(Commercial::class)->houseCompanySlug)->where('status', 'active')->get()->getRowArray();
+        if (! $house || ! Services::components()->isEnabled('crm')) {
+            return null;
+        }
+        $houseId = (int) $house['id'];
+        // Todo lo que se escribe en el CRM de HV ocurre dentro del contexto de HV (RLS).
+        $r = Rls::withCompany($houseId, fn () => service('crmLeads')->capture($houseId, [
+            'first_name' => $personName, 'organization' => $companyName, 'email' => $email, 'phone' => $phone,
+        ], ['title' => $title, 'project_id' => $this->houseProject($houseId)], 'automation'));
+
+        return $r->ok ? $r->data['opportunity_id'] : null;
+    }
+
     /** Proyecto del CRM de HV para estas oportunidades (lo crea la primera vez). */
-    private function houseProject(int $houseId): ?int
+    public function houseProject(int $houseId): ?int
     {
         $cfg = config(Commercial::class);
         $p   = db_connect()->table('cmp_crm_projects')->where('company_id', $houseId)->where('code', $cfg->houseProjectCode)->get()->getRowArray();

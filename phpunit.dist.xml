@@ -67,5 +67,7 @@
         <!-- Clave SOLO de pruebas -->
         <env name="encryption.key" value="hex2bin:00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff"/>
         <env name="security.tokenRandomize" value="false"/>
+        <!-- Correo «configurado» en pruebas: el envío real lo intercepta MockEmail de CI4 -->
+        <env name="email.fromEmail" value="no-reply@hvcrm.test"/>
     </php>
 </phpunit>

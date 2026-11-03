@@ -17,7 +17,7 @@ class UserService
      *
      * @param array{name?:string, email?:string, role_id?:int|string} $data
      */
-    public function addMember(string $scope, ?int $tenantId, ?int $companyId, array $data, ?int $actorId): Result
+    public function addMember(string $scope, ?int $tenantId, ?int $companyId, array $data, ?int $actorId, bool $handOver = false): Result
     {
         $name   = trim((string) ($data['name'] ?? ''));
         $email  = strtolower(trim((string) ($data['email'] ?? '')));
@@ -45,7 +45,7 @@ class UserService
             }
         }
 
-        return Services::invitations()->invite($scope, $tenantId, $companyId, $name, $email, $roleId, $actorId);
+        return Services::invitations()->invite($scope, $tenantId, $companyId, $name, $email, $roleId, $actorId, $handOver);
     }
 
     /** Rol asignable en el ámbito (sistema o personalizado del mismo negocio). */

@@ -153,8 +153,38 @@ class SubmissionService
             'ip_hash' => hash_hmac('sha256', $ip, $this->key('hv-ip-hash')), 'created_at' => date('Y-m-d H:i:s'),
         ]);
         $db->table('cmp_form_forms')->where('id', $form['id'])->set('submissions_count', 'submissions_count + 1', false)->update();
+        $this->acknowledge($form, $contact);
 
         return Result::success($lead->data, $form['success_message'] ?: lang('Form.thanks'));
+    }
+
+    /**
+     * Acuse de recibo inmediato al lead (transaccional: no requiere autorización de marketing).
+     * Anti-abuso: como máximo UN acuse por formulario, destinatario y día (dedupe_key), además del
+     * límite por IP del formulario; el texto no repite datos enviados por el visitante salvo su nombre.
+     *
+     * @param array<string, string> $contact datos mapeados (first_name, email…)
+     */
+    private function acknowledge(array $form, array $contact): void
+    {
+        $email = strtolower(trim((string) ($contact['email'] ?? '')));
+        if ((int) ($form['send_ack'] ?? 1) !== 1 || $email === '' || ! class_exists(\App\Libraries\NotificationService::class)) {
+            return;
+        }
+        $name    = mb_substr(trim((string) ($contact['first_name'] ?? '')), 0, 60);
+        $company = (string) $form['company_name'];
+        (new \App\Libraries\NotificationService())->queue(
+            'lead-ack:' . $form['id'] . ':' . hash('sha256', $email) . ':' . date('Y-m-d'),
+            'lead_ack', $email, (string) ($form['company_locale'] ?? 'es'),
+            'Form.ack.subject', [$company], 'emails/message',
+            static fn () => [
+                'greeting' => $name !== '' ? lang('Form.ack.greeting', [$name]) : lang('Form.ack.greetingAnon'),
+                'lines'    => [lang('Form.ack.received', [$company]), lang('Form.ack.next')],
+                'note'     => lang('Form.ack.notYou'),
+                'sender'   => $company,
+            ],
+            (int) $form['company_id']
+        );
     }
 
     private function sign(string $publicId, string $payload): string

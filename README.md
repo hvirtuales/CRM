@@ -12,6 +12,8 @@ de su red de distribuidores. Tres espacios operativos con aislamiento estricto:
 **Automatización comercial** ([ADR 0004](docs/adr/0004-automatizacion-comercial.md)): reparto de leads por
 proyecto, alertas de seguimiento con escalamiento, cierre/vencimiento de cotizaciones, oportunidades de
 renovación, fin de prueba y ampliación, y liquidación mensual de comisiones.
+**Comunicaciones** ([ADR 0005](docs/adr/0005-comunicaciones-transaccionales.md)): acuse inmediato al lead,
+cotizaciones por correo, cobranza escalonada y autorregistro «Pruébelo gratis» (`/registro`).
 
 **Stack:** PHP 8.3+ (objetivo 8.4) · CodeIgniter 4.7 · PostgreSQL (portable a MySQL/SQL Server) ·
 Tailwind CSS 4 (CLI autónomo, **sin Node**) · JavaScript nativo · sin React/Python.
@@ -42,6 +44,7 @@ Tarea diaria (suscripciones, oportunidades automáticas, comisiones y tareas de 
 
 ```
 15 2 * * * cd /var/www/hv-crm && php spark hv:lifecycle >> writable/logs/lifecycle.log 2>&1
+*/5 * * * * cd /var/www/hv-crm && php spark hv:outbox >> writable/logs/outbox.log 2>&1
 ```
 
 ## Pruebas
@@ -50,7 +53,7 @@ Tarea diaria (suscripciones, oportunidades automáticas, comisiones y tareas de 
 vendor/bin/phpunit --no-coverage          # PostgreSQL hvcrm_test con RLS (¡se borra en cada ejecución!)
 ```
 
-94 pruebas / 875 aserciones: unitarias, contrato de componentes, i18n y **seguridad** (aislamiento
+102 pruebas / 935 aserciones: unitarias, contrato de componentes, i18n y **seguridad** (aislamiento
 entre negocios y distribuidores, IDOR, RBAC/ABAC, CSRF, MFA, bloqueo, API, formularios públicos,
 inyección, RLS). Informe: [`docs/security/informe-pruebas-seguridad.md`](docs/security/informe-pruebas-seguridad.md).
 

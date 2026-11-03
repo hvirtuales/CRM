@@ -42,7 +42,7 @@ foreach ($projects as $p) { $projectOptions[$p['id']] = $p['name']; }
         ['key' => 'correo', 'label' => lang('Form.defaultEmail'), 'type' => 'email', 'required' => true, 'maps_to' => 'email', 'options' => [], 'placeholder' => ''],
         ['key' => 'telefono', 'label' => lang('Form.defaultPhone'), 'type' => 'phone', 'required' => false, 'maps_to' => 'phone', 'options' => [], 'placeholder' => ''],
         ['key' => 'mensaje', 'label' => lang('Form.defaultMessage'), 'type' => 'textarea', 'required' => false, 'maps_to' => 'notes', 'options' => [], 'placeholder' => ''],
-    ]), 'consent_text' => lang('Form.defaultConsent'), 'success_message' => '', 'embed_domains' => null, 'create_opportunity' => 1];
+    ]), 'consent_text' => lang('Form.defaultConsent'), 'success_message' => '', 'embed_domains' => null, 'create_opportunity' => 1, 'send_ack' => 1];
     $fieldsJson = old('fields_json') ?? $f['fields'];
     $domains = implode("\n", array_map(static fn ($d) => preg_replace('#^https://#', '', $d), json_decode((string) $f['embed_domains'], true) ?: []));
 ?>
@@ -96,6 +96,7 @@ foreach ($projects as $p) { $projectOptions[$p['id']] = $p['name']; }
       <p class="form-section-hint"><?= lang('Form.sectionPublicationHint') ?></p>
       <?= view('partials/field', ['name' => 'success_message', 'label' => lang('Form.successMessage'), 'value' => $f['success_message'], 'placeholder' => lang('Form.thanks'), 'attrs' => ['maxlength' => 255]]) ?>
       <?= view('partials/field', ['name' => 'embed_domains', 'label' => lang('Form.embedDomains'), 'type' => 'textarea', 'value' => $domains, 'placeholder' => "www.herramientasvirtuales.co\n*.vitrinadigital.co", 'hint' => lang('Form.embedDomainsHint')]) ?>
+      <?= view('partials/toggle', ['name' => 'send_ack', 'label' => lang('Form.sendAck'), 'description' => lang('Form.sendAckHint'), 'checked' => (int) ($f['send_ack'] ?? 1) === 1]) ?>
       <?= view('partials/toggle', ['name' => 'create_opportunity', 'label' => lang('Form.createOpportunity'), 'description' => lang('Form.createOpportunityHint'), 'checked' => (int) $f['create_opportunity'] === 1]) ?>
     </fieldset>
   </div>

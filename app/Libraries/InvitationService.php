@@ -19,7 +19,11 @@ class InvitationService
     /** Último enlace generado (solo fuera de producción, para pruebas y demostración local). */
     public ?string $lastLinkForDevelopment = null;
 
-    public function invite(string $scope, ?int $tenantId, ?int $companyId, string $name, string $email, int $roleId, ?int $actorId): Result
+    /**
+     * @param bool $handOver true SOLO cuando el titular ya demostró controlar el correo (autorregistro
+     *                       verificado): no se envía correo y el token se devuelve para continuar el flujo.
+     */
+    public function invite(string $scope, ?int $tenantId, ?int $companyId, string $name, string $email, int $roleId, ?int $actorId, bool $handOver = false): Result
     {
         $db = db_connect();
 
@@ -44,6 +48,9 @@ class InvitationService
         $id = (int) $db->insertID();
         Services::audit()->log('invitation.created', 'invitation', $id, ['scope' => $scope, 'role_id' => $roleId], $companyId, $tenantId);
 
+        if ($handOver) {
+            return Result::success(['invitation_id' => $id, 'sent' => false, 'token' => $token]);
+        }
         $sent = $this->deliver($email, $name, $token, $this->organizationName($scope, $tenantId, $companyId));
 
         return Result::success(['invitation_id' => $id, 'sent' => $sent], $sent ? lang('Core.invitationSent', [$email]) : lang('Core.invitationNotSent'));
@@ -124,6 +131,7 @@ class InvitationService
             ]);
         }
         $db->transComplete();
+        $db->table('outbox')->where('dedupe_key', 'invitation:' . hash('sha256', $token))->where('status', 'queued')->delete();
         Services::audit()->log('invitation.accepted', 'invitation', (int) $inv['id'], ['user_id' => $userId], $inv['company_id'] ? (int) $inv['company_id'] : null, $inv['tenant_id'] ? (int) $inv['tenant_id'] : null);
 
         return Result::success(['user_id' => $userId, 'new_account' => ! $user]);
@@ -168,33 +176,28 @@ class InvitationService
         };
     }
 
-    /** Envía el enlace al correo invitado. Nunca lo devuelve al administrador que invita. */
+    /**
+     * Envía el enlace al correo invitado por la bandeja de salida. Nunca lo devuelve al administrador.
+     * Devuelve true si salió de inmediato (si no, queda en cola hasta configurar el correo).
+     */
     private function deliver(string $email, string $name, string $token, string $organization): bool
     {
         $link = site_url('invitacion/' . $token);
         if (ENVIRONMENT !== 'production') {
             $this->lastLinkForDevelopment = $link;
-        }
-        $cfg = config('Email');
-        if ((string) $cfg->fromEmail === '') {
-            if (ENVIRONMENT !== 'production') {
+            if (! NotificationService::emailConfigured()) {
                 log_message('info', 'Invitación (sin correo configurado) para {email}: {link}', ['email' => $email, 'link' => $link]);
             }
-
-            return false;
         }
+        $id = (new NotificationService())->queue('invitation:' . hash('sha256', $token), 'invitation', $email, (string) (service('request')->getLocale() ?: 'es'),
+            'Core.invitationSubject', [$organization], 'emails/message', [
+                'greeting'  => lang('Core.invitationHello', [$name]),
+                'lines'     => [lang('Core.invitationBody', [$organization])],
+                'cta_label' => lang('Core.invitationAccept'),
+                'cta_url'   => $link,
+                'note'      => lang('Core.invitationExpires', [self::TTL_HOURS]),
+            ]);
 
-        try {
-            $mail = Services::email();
-            $mail->setTo($email);
-            $mail->setSubject(lang('Core.invitationSubject', [$organization]));
-            $mail->setMessage(view('emails/invitation', ['name' => $name, 'organization' => $organization, 'link' => $link, 'hours' => self::TTL_HOURS]));
-
-            return $mail->send(false);
-        } catch (\Throwable $e) {
-            log_message('error', 'Fallo al enviar invitación: {msg}', ['msg' => $e->getMessage()]);
-
-            return false;
-        }
+        return $id !== null && db_connect()->table('outbox')->where('id', $id)->where('status', 'sent')->countAllResults() > 0;
     }
 }

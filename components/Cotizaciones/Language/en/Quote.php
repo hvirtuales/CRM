@@ -68,7 +68,7 @@ return [
         'accepted' => 'Record that the client accepted the quote?',
         'rejected' => 'Record that the client rejected the quote?',
     ],
-    'moved' => [ 'expired' => 'Quote expired.','draft' => 'Quote moved back to draft.', 'sent' => 'Quote sent.', 'accepted' => 'Acceptance recorded: the opportunity was marked as won with the quoted amount.', 'rejected' => 'Rejection recorded.', 'void' => 'Quote voided.'],
+    'moved' => [ 'sentEmailed' => 'Quote sent; the email with the link to the client was scheduled.', 'sentNoEmail' => 'Quote marked as sent. The contact has no email: share the link manually.', 'expired' => 'Quote expired.','draft' => 'Quote moved back to draft.', 'sent' => 'Quote sent.', 'accepted' => 'Acceptance recorded: the opportunity was marked as won with the quoted amount.', 'rejected' => 'Rejection recorded.', 'void' => 'Quote voided.'],
     'activity' => ['sent' => 'Quote {0} sent for {1}.', 'accepted' => 'Quote {0} accepted ({1}).', 'rejected' => 'Quote {0} rejected ({1}).'],
 
     'catalogHelp' => 'Services your business sells, with price, tax and billing period. Used in quotes.',
@@ -107,4 +107,5 @@ return [
         'lineService' => 'The service on line {0} does not exist in your catalog.',
     ],
     'followUp' => ['expired' => 'Quote {0} expired without an answer: contact the client.', 'expiring' => 'Quote {0} expires on {1}: follow up.'],
+    'mail' => ['greeting' => 'Hello {0},', 'cta' => 'View quote', 'note' => 'Reply directly to your rep if you have questions.', 'sent' => ['subject' => 'Quote {0} from {1}', 'body' => 'Here is quote {0} for {1}, valid until {2}.'], 'reminder' => ['subject' => 'Your quote {0} from {1} expires soon', 'body' => 'A reminder that quote {0} for {1} expires on {2}.']],
 ];

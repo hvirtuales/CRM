@@ -198,6 +198,12 @@ class QuoteService
         }
         Services::audit()->log('quote.' . $to, 'quote', $id, [], $companyId);
 
+        if ($to === 'sent') {
+            $mailed = $this->emailClient($companyId, array_merge($q, $data), 'sent');
+
+            return Result::success(['emailed' => $mailed], $mailed ? lang('Quote.moved.sentEmailed') : lang('Quote.moved.sentNoEmail'));
+        }
+
         return Result::success(null, lang('Quote.moved.' . $to));
     }
 
@@ -231,11 +237,44 @@ class QuoteService
                 service('crmOpportunities')->scheduleFollowUp((int) $q['company_id'], (int) $q['opportunity_id'],
                     lang('Quote.followUp.expiring', [$q['number'], $q['valid_until']]), $now);
             }
+            $this->emailClient((int) $q['company_id'], $q, 'reminder');
             $db->table('cmp_quote_quotes')->where('id', $q['id'])->update(['reminded_at' => date('Y-m-d H:i:s', $now)]);
             $stats['reminded']++;
         }
 
         return $stats;
+    }
+
+    /**
+     * Correo al cliente con el enlace público de la cotización (al enviarla y 3 días antes de vencer).
+     * Destinatario: el correo del contacto de la oportunidad, resuelto por el servicio público del CRM.
+     */
+    private function emailClient(int $companyId, array $q, string $kind): bool
+    {
+        if (! $q['contact_id'] || ! class_exists(\App\Libraries\NotificationService::class)) {
+            return false;
+        }
+        $contact = service('crmContacts')->summaries($companyId, [(int) $q['contact_id']])[(int) $q['contact_id']] ?? null;
+        if (! $contact || empty($contact['email'])) {
+            return false;
+        }
+        $company = db_connect()->table('companies')->select('name, locale')->where('id', $companyId)->get()->getRow();
+        $link    = site_url('quote-publico/' . $q['public_id']);
+        $id = (new \App\Libraries\NotificationService())->queue(
+            'quote-' . $kind . ':' . $q['id'] . ':' . ($q['sent_at'] ?? ''), 'quote_' . $kind, (string) $contact['email'], (string) ($company->locale ?? 'es'),
+            'Quote.mail.' . $kind . '.subject', [$q['number'], (string) $company->name], 'emails/message',
+            static fn () => [
+                'greeting'  => lang('Quote.mail.greeting', [$contact['name']]),
+                'lines'     => [lang('Quote.mail.' . $kind . '.body', [$q['number'], money($q['total'], $q['currency']), (string) $q['valid_until']])],
+                'cta_label' => lang('Quote.mail.cta'),
+                'cta_url'   => $link,
+                'note'      => lang('Quote.mail.note'),
+                'sender'    => (string) $company->name,
+            ],
+            $companyId
+        );
+
+        return $id !== null;
     }
 
     /**

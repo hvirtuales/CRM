@@ -17,6 +17,11 @@ $routes->post('ingresar', 'Auth::attempt');
 $routes->get('mfa', 'Auth::mfa', ['filter' => 'auth:noscope']);
 $routes->post('mfa', 'Auth::verifyMfa', ['filter' => 'auth:noscope']);
 $routes->post('salir', 'Auth::logout');
+// Autorregistro «Pruébelo gratis» (público; verificación por correo).
+$routes->get('registro', 'Signup::index');
+$routes->post('registro', 'Signup::store');
+$routes->get('registro/verificar/(:segment)', 'Signup::verify/$1');
+
 // Invitaciones: públicas (el token es la credencial); aceptar exige ser el titular del correo.
 $routes->get('invitacion/(:segment)', 'Invitations::show/$1');
 $routes->post('invitacion/(:segment)', 'Invitations::accept/$1');
@@ -74,6 +79,9 @@ $routes->group('plataforma', ['namespace' => 'App\Controllers\Platform', 'filter
     $routes->post('soporte', 'Support::store', ['filter' => 'permission:platform.support.request']);
 
     $routes->get('auditoria', 'Audit::index', ['filter' => 'permission:platform.audit.view']);
+
+    $routes->get('correos', 'Outbox::index', ['filter' => 'permission:platform.notifications.view']);
+    $routes->post('correos/(:num)/reintentar', 'Outbox::retry/$1', ['filter' => 'permission:platform.notifications.edit']);
 });
 
 // ---------------------------------------------------------------- Distribuidor

@@ -21,4 +21,5 @@ return [
     'settings' => 'Configuración',
     'tokens' => 'Tokens de API',
     'profile' => 'Mi perfil',
+    'outbox' => 'Correos enviados',
 ];

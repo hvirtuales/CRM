@@ -183,4 +183,5 @@ return [
         'abilities' => 'Elija al menos una habilidad.',
     ],
     'settlementPaid' => 'Extracto marcado como pagado; sus comisiones quedaron pagadas.',
+    'outboxRetried' => 'Correo puesto de nuevo en cola.',
 ];

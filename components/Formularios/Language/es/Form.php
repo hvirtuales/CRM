@@ -129,4 +129,7 @@ return [
             'checkbox' => 'Valor inválido.',
         ],
     ],
+    'sendAck' => 'Responder al instante por correo',
+    'sendAckHint' => 'Activo = el visitante recibe un acuse de recibo con el nombre de su negocio (máximo uno por día por correo).',
+    'ack' => ['subject' => 'Recibimos su solicitud — {0}', 'greeting' => 'Hola, {0}:', 'greetingAnon' => 'Hola:', 'received' => 'Recibimos su solicitud en {0}.', 'next' => 'Un asesor la revisará y le contactará pronto.', 'notYou' => 'Si usted no envió esta solicitud, ignore este mensaje.'],
 ];

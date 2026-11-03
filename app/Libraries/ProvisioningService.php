@@ -54,7 +54,11 @@ class ProvisioningService
     /**
      * @param int|null $tenantId tenant del actor (NULL = negocio directo de plataforma)
      */
-    public function createCompany(array $data, ?int $tenantId, int $actorId): Result
+    /**
+     * @param bool $selfService autorregistro verificado: la invitación del propietario se entrega en el
+     *                          mismo flujo (token en data['owner_token']) en lugar de por correo.
+     */
+    public function createCompany(array $data, ?int $tenantId, ?int $actorId, bool $selfService = false): Result
     {
         $errors = $this->validateOrg($data, 'companies');
         $errors += $this->validateOwner($data);
@@ -92,7 +96,7 @@ class ProvisioningService
         $owner = Services::users()->addMember('company', null, $companyId, [
             'name' => $data['owner_name'], 'email' => $data['owner_email'],
             'role_id' => Services::rbac()->systemRoleId('business_owner'),
-        ], $actorId);
+        ], $actorId, $selfService);
         if (! $owner->ok) {
             $db->transRollback();
 
@@ -110,7 +114,7 @@ class ProvisioningService
 
         Services::audit()->log('company.created', 'company', $companyId, ['name' => $data['name'], 'tenant_id' => $tenantId], $companyId, $tenantId);
 
-        return Result::success(['id' => $companyId, 'invitation_sent' => $owner->data['sent']]);
+        return Result::success(['id' => $companyId, 'invitation_sent' => $owner->data['sent'], 'owner_token' => $owner->data['token'] ?? null]);
     }
 
     /** Traslado entre distribuidores: privilegiado, justificado y con historial. */

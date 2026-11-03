@@ -39,6 +39,8 @@ class Rbac extends BaseConfig
         'platform.users.edit'         => ['platform', 'Gestionar equipo de plataforma'],
         'platform.support.request'    => ['platform', 'Solicitar acceso de soporte a un negocio'],
         'platform.audit.view'         => ['platform', 'Ver auditoría global'],
+        'platform.notifications.view' => ['platform', 'Ver bandeja de salida de correos'],
+        'platform.notifications.edit' => ['platform', 'Reintentar correos fallidos'],
 
         // Distribuidor
         'tenant.dashboard.view'       => ['tenant', 'Ver panel de cartera'],

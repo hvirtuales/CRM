@@ -30,9 +30,21 @@ class Commercial extends BaseConfig
     /** Porcentaje de uso de un cupo del plan que dispara la oportunidad de ampliación. */
     public float $usageThreshold = 0.8;
 
+    /** Autorregistro público «Pruébelo gratis» (/registro). Desactívelo con HV_SELF_SIGNUP=false. */
+    public bool $selfSignup = true;
+
+    /** Enlace a términos y política de datos que el registrante debe aceptar. */
+    public string $termsUrl = 'https://herramientasvirtuales.co/politica-de-datos';
+
     public function __construct()
     {
         parent::__construct();
+        if (env('HV_SELF_SIGNUP') !== null) {
+            $this->selfSignup = filter_var(env('HV_SELF_SIGNUP'), FILTER_VALIDATE_BOOL);
+        }
+        if (($url = env('HV_TERMS_URL')) && preg_match('#^https://#', (string) $url)) {
+            $this->termsUrl = (string) $url;
+        }
         if (($slug = env('HV_HOUSE_COMPANY')) && preg_match('/^[a-z0-9\-]{2,80}$/', (string) $slug)) {
             $this->houseCompanySlug = (string) $slug;
         }

@@ -34,7 +34,7 @@ class FormService
         if (! preg_match('/^[0-9a-z]{20,32}$/', $publicId)) {
             return null;
         }
-        $row = db_connect()->table($this->table . ' f')->select('f.*, c.name AS company_name, c.status AS company_status, c.tenant_id')
+        $row = db_connect()->table($this->table . ' f')->select('f.*, c.name AS company_name, c.status AS company_status, c.tenant_id, c.locale AS company_locale')
             ->join('companies c', 'c.id = f.company_id')
             ->where('f.public_id', $publicId)->where('f.status', 'published')->where('f.deleted_at', null)
             ->get()->getRowArray();
@@ -106,6 +106,7 @@ class FormService
             'consent_text' => $consent ?: null, 'success_message' => $success ?: null,
             'embed_domains' => $domains ? json_encode($domains) : null,
             'create_opportunity' => ! empty($data['create_opportunity']) ? 1 : 0,
+            'send_ack'           => ! empty($data['send_ack']) ? 1 : 0,
             'updated_at' => date('Y-m-d H:i:s'),
         ];
         $db = db_connect();

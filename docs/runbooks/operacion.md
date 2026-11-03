@@ -13,6 +13,9 @@
   renovación/prueba/ampliación en el CRM de HV, extractos mensuales de comisiones y tareas de componentes
   (vencimiento y recordatorios de cotizaciones). Negocio «casa»: `HV_HOUSE_COMPANY` (por defecto `herramientas-virtuales`).
 
+- `php spark hv:outbox` cada 5 minutos: envía la bandeja de salida de correos con reintentos.
+  Requiere `email.*` en `.env` (SMTP o Microsoft Graph vía SMTP); configure SPF, DKIM y DMARC del dominio remitente.
+
 ## Copias de seguridad (RPO 24 h / RTO 8 h iniciales)
 - `pg_dump -Fc hvcrm` diario cifrado fuera del servidor; probar restauración mensual en staging.
 - Respaldar `.env`/secretos por separado (gestor de secretos).

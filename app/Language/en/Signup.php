@@ -1,0 +1,30 @@
+<?php
+
+return [
+    'title' => 'Try HV CRM for free',
+    'cta' => 'No account? Try it free',
+    'intro' => 'Create your business in minutes. We will email you a link to verify your address and start the trial.',
+    'company' => 'Business name',
+    'name' => 'Your name',
+    'emailHint' => 'It will be your sign-in user. You must be able to receive email at this address.',
+    'planOption' => '{0} · {1} days free, then {2}/month',
+    'terms' => 'I accept the terms of service and the data processing policy (Colombian Law 1581/2012).',
+    'termsLink' => 'Read policy',
+    'submit' => 'Start my free trial',
+    'haveAccount' => 'Already have an account? Sign in',
+    'noPlans' => 'There are no plans with a free trial right now. Contact us for a demo.',
+    'sentTitle' => 'Check your email',
+    'sentBody' => 'If the details are correct, we sent you a link to verify your email and start the trial. It expires in {0} hours.',
+    'closed' => 'Online sign-up is not available. Contact us to create your account.',
+    'invalid' => 'The link is invalid, already used or expired. Please sign up again.',
+    'alreadyUsed' => 'This email already has a trial registered. Sign in with your account or contact us.',
+    'leadTitle' => 'Self-service sign-up {0} — {1}',
+    'mail' => [
+        'subject'  => 'Verify your email to activate HV CRM',
+        'greeting' => 'Hello {0},',
+        'body'     => 'We received the trial request for {0}. Confirm this email is yours to create the account.',
+        'cta'      => 'Verify and start trial',
+        'note'     => 'The link is personal, single-use and expires in {0} hours. If you did not request this, ignore the message.',
+    ],
+    'validation' => ['terms' => 'You must accept the terms and the data policy.'],
+];

@@ -128,4 +128,7 @@ return [
             'checkbox' => 'Invalid value.',
         ],
     ],
+    'sendAck' => 'Reply instantly by email',
+    'sendAckHint' => 'On = the visitor receives an acknowledgement with your business name (at most one per day per email).',
+    'ack' => ['subject' => 'We received your request — {0}', 'greeting' => 'Hello {0},', 'greetingAnon' => 'Hello,', 'received' => 'We received your request at {0}.', 'next' => 'A rep will review it and contact you soon.', 'notYou' => 'If you did not send this request, ignore this message.'],
 ];

@@ -1,0 +1,30 @@
+<?php
+
+return [
+    'title' => 'Pruebe HV CRM gratis',
+    'cta' => '¿No tiene cuenta? Pruébelo gratis',
+    'intro' => 'Cree su negocio en minutos. Le enviaremos un enlace para verificar su correo y activar la prueba.',
+    'company' => 'Nombre del negocio',
+    'name' => 'Su nombre',
+    'emailHint' => 'Será su usuario de acceso. Debe poder recibir correos en esta dirección.',
+    'planOption' => '{0} · {1} días gratis, luego {2}/mes',
+    'terms' => 'Acepto los términos del servicio y la política de tratamiento de datos (Ley 1581 de 2012).',
+    'termsLink' => 'Leer política',
+    'submit' => 'Crear mi prueba gratis',
+    'haveAccount' => '¿Ya tiene cuenta? Ingrese',
+    'noPlans' => 'Por ahora no hay planes con prueba gratuita. Contáctenos para una demostración.',
+    'sentTitle' => 'Revise su correo',
+    'sentBody' => 'Si los datos son correctos, le enviamos un enlace para verificar su correo y activar la prueba. Vence en {0} horas.',
+    'closed' => 'El registro en línea no está disponible. Contáctenos para crear su cuenta.',
+    'invalid' => 'El enlace no es válido, ya se usó o venció. Regístrese de nuevo.',
+    'alreadyUsed' => 'Este correo ya tiene una prueba registrada. Ingrese con su cuenta o contáctenos.',
+    'leadTitle' => 'Registro autoservicio {0} — {1}',
+    'mail' => [
+        'subject'  => 'Verifique su correo para activar HV CRM',
+        'greeting' => 'Hola, {0}:',
+        'body'     => 'Recibimos la solicitud de prueba para {0}. Confirme que este correo es suyo para crear la cuenta.',
+        'cta'      => 'Verificar y activar prueba',
+        'note'     => 'El enlace es personal, de un solo uso y vence en {0} horas. Si no hizo esta solicitud, ignore el mensaje.',
+    ],
+    'validation' => ['terms' => 'Debe aceptar los términos y la política de datos.'],
+];

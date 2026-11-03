@@ -162,6 +162,7 @@ class DemoSeeder extends Seeder
             ]),
             'consent_text' => 'Autorizo el tratamiento de mis datos personales conforme a la política de privacidad de Herramientas Virtuales (Ley 1581 de 2012).',
             'create_opportunity' => 1,
+            'send_ack'           => 1,
         ]);
         service('formForms')->publish($hv, (int) $form->data['id']);
         Rls::setBypass(true);

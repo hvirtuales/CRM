@@ -19,6 +19,9 @@ class Dashboard extends BaseController
         }
 
         return view('platform/dashboard', [
+            'emailConfigured' => \App\Libraries\NotificationService::emailConfigured(),
+            'queuedMails'     => $db->table('outbox')->where('status', 'queued')->countAllResults(),
+            'failedMails'     => $db->table('outbox')->where('status', 'failed')->countAllResults(),
             'tenants'        => $db->table('tenants')->where('status', 'active')->where('deleted_at', null)->countAllResults(),
             'companies'      => $db->table('companies')->where('status', 'active')->where('deleted_at', null)->countAllResults(),
             'direct'         => $db->table('companies')->where('tenant_id', null)->where('status', 'active')->countAllResults(),

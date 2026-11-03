@@ -180,4 +180,5 @@ return [
         'abilities' => 'Choose at least one ability.',
     ],
     'settlementPaid' => 'Statement marked as paid; its commissions are now paid.',
+    'outboxRetried' => 'Email queued again.',
 ];

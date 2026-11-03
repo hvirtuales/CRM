@@ -21,4 +21,5 @@ return [
     'settings' => 'Settings',
     'tokens' => 'API tokens',
     'profile' => 'My profile',
+    'outbox' => 'Sent emails',
 ];

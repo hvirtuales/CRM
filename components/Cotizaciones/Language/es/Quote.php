@@ -68,7 +68,7 @@ return [
         'accepted' => '¿Registrar que el cliente aceptó la cotización?',
         'rejected' => '¿Registrar que el cliente rechazó la cotización?',
     ],
-    'moved' => [ 'expired' => 'Cotización expirada.','draft' => 'Cotización devuelta a borrador.', 'sent' => 'Cotización enviada.', 'accepted' => 'Aceptación registrada: la oportunidad quedó ganada con el valor cotizado.', 'rejected' => 'Rechazo registrado.', 'void' => 'Cotización anulada.'],
+    'moved' => [ 'sentEmailed' => 'Cotización enviada; el correo con el enlace al cliente quedó programado.', 'sentNoEmail' => 'Cotización marcada como enviada. El contacto no tiene correo: comparta el enlace manualmente.', 'expired' => 'Cotización expirada.','draft' => 'Cotización devuelta a borrador.', 'sent' => 'Cotización enviada.', 'accepted' => 'Aceptación registrada: la oportunidad quedó ganada con el valor cotizado.', 'rejected' => 'Rechazo registrado.', 'void' => 'Cotización anulada.'],
     'activity' => ['sent' => 'Cotización {0} enviada por {1}.', 'accepted' => 'Cotización {0} aceptada ({1}).', 'rejected' => 'Cotización {0} rechazada ({1}).'],
 
     'catalogHelp' => 'Servicios que vende su negocio, con precio, impuesto y periodicidad. Se usan en las cotizaciones.',
@@ -107,4 +107,5 @@ return [
         'lineService' => 'El servicio de la línea {0} no existe en su catálogo.',
     ],
     'followUp' => ['expired' => 'La cotización {0} venció sin respuesta: contacte al cliente.', 'expiring' => 'La cotización {0} vence el {1}: haga seguimiento.'],
+    'mail' => ['greeting' => 'Hola, {0}:', 'cta' => 'Ver cotización', 'note' => 'Responda directamente a su asesor si tiene preguntas.', 'sent' => ['subject' => 'Cotización {0} de {1}', 'body' => 'Le compartimos la cotización {0} por {1}, válida hasta el {2}.'], 'reminder' => ['subject' => 'Su cotización {0} de {1} vence pronto', 'body' => 'Le recordamos que la cotización {0} por {1} vence el {2}.']],
 ];
