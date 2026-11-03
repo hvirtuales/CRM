@@ -1,0 +1,249 @@
+POLÍTICA DE TRATAMIENTO DE DATOS PERSONALES
+HERRAMIENTAS VIRTUALES CO S.A.S.
+
+Versión 1.0 — Vigente desde el 3 de noviembre de 2026
+Publicada en: https://herramientasvirtuales.co/politica-de-datos-sistemapos
+
+────────────────────────────────────────────────────────────────────
+
+1. IDENTIFICACIÓN DEL RESPONSABLE
+
+Razón social: Herramientas Virtuales CO S.A.S. (en adelante, "Herramientas Virtuales")
+NIT: [COMPLETAR]
+Domicilio y dirección: [COMPLETAR — dirección, ciudad], Colombia
+Correo para asuntos de datos personales: [COMPLETAR — p. ej. privacidad@herramientasvirtuales.co]
+Teléfono: [COMPLETAR]
+Sitio web: https://herramientasvirtuales.co
+
+2. MARCO LEGAL Y ÁMBITO DE APLICACIÓN
+
+Esta política se expide en cumplimiento de la Constitución Política (artículos 15 y 20), la Ley 1581
+de 2012, el Decreto 1377 de 2013 (compilado en el Decreto Único 1074 de 2015) y demás normas que los
+modifiquen o complementen.
+
+Aplica a los datos personales que Herramientas Virtuales recolecta, almacena, usa, circula o suprime
+en el desarrollo de su actividad, incluidas sus plataformas de software en la nube (entre ellas
+HV CRM), sus formularios web, su atención comercial y de soporte, y su relación con clientes,
+distribuidores, proveedores y empleados.
+
+3. DEFINICIONES
+
+- Titular: persona natural cuyos datos personales son objeto de tratamiento.
+- Dato personal: cualquier información vinculada o que pueda asociarse a una persona natural
+  determinada o determinable.
+- Dato sensible: aquel que afecta la intimidad del titular o cuyo uso indebido puede generar
+  discriminación (origen racial o étnico, orientación política, convicciones religiosas, salud,
+  vida sexual, datos biométricos, entre otros).
+- Tratamiento: cualquier operación sobre datos personales (recolección, almacenamiento, uso,
+  circulación o supresión).
+- Responsable del tratamiento: quien decide sobre la base de datos y/o el tratamiento.
+- Encargado del tratamiento: quien realiza el tratamiento por cuenta del responsable.
+- Autorización: consentimiento previo, expreso e informado del titular.
+- Transferencia: envío de datos a un receptor que es a su vez responsable, dentro o fuera del país.
+- Transmisión: comunicación de datos a un encargado para que realice el tratamiento por cuenta del
+  responsable, dentro o fuera del país.
+
+4. CALIDAD EN QUE ACTÚA HERRAMIENTAS VIRTUALES
+
+4.1 Como RESPONSABLE. Herramientas Virtuales es responsable de los datos de:
+  a) Clientes y prospectos de sus servicios (incluidas las personas que se registran en la prueba
+     gratuita o solicitan información).
+  b) Usuarios de sus plataformas (nombre, correo de acceso, rol y registros de actividad).
+  c) Distribuidores y su personal de contacto.
+  d) Proveedores, contratistas y empleados.
+
+4.2 Como ENCARGADO. Los negocios que contratan las plataformas (por ejemplo, HV CRM) registran en ellas
+los datos de SUS propios clientes, prospectos y contactos, por ejemplo a través de formularios
+publicados con su nombre. Respecto de esos datos, cada negocio es el RESPONSABLE: decide para qué los
+usa y debe contar con la autorización de sus titulares. Herramientas Virtuales actúa como ENCARGADO:
+los trata únicamente para prestar el servicio contratado, según las instrucciones del negocio, y no
+los usa para fines propios, no los vende ni los comparte con otros negocios de la plataforma.
+
+Los titulares cuyos datos fueron registrados por un negocio deben dirigir sus consultas y reclamos a
+ese negocio. Si se dirigen a Herramientas Virtuales, trasladaremos la solicitud al negocio responsable
+e informaremos de ello al titular.
+
+5. DATOS QUE SE TRATAN
+
+- Identificación y contacto: nombres, apellidos, correo electrónico, teléfono, ciudad, empresa o
+  negocio, cargo.
+- Datos de la relación comercial: plan contratado, suscripción, pagos (valor, fecha, referencia),
+  facturación y comunicaciones.
+- Datos de acceso y seguridad: correo de usuario, contraseña (almacenada solo como huella criptográfica
+  irreversible), configuración de verificación en dos pasos, sesiones, direcciones IP y registros de
+  auditoría de las acciones realizadas.
+- Autorizaciones: fecha, medio y origen del consentimiento otorgado.
+- Datos técnicos del uso del sitio y las plataformas estrictamente necesarios para su funcionamiento y
+  seguridad (ver la sección 14, Cookies).
+
+Herramientas Virtuales no solicita datos sensibles ni datos de niños, niñas y adolescentes para sus
+propias finalidades. No almacena números de tarjeta ni datos bancarios: los pagos en línea, cuando se
+habiliten, se procesan a través de pasarelas de pago autorizadas.
+
+6. FINALIDADES DEL TRATAMIENTO
+
+Herramientas Virtuales trata los datos de los que es responsable para:
+  a) Crear y administrar cuentas de usuario, verificar el correo electrónico y permitir el acceso
+     seguro a las plataformas.
+  b) Prestar, mantener, soportar y mejorar los servicios contratados.
+  c) Gestionar la relación contractual: suscripciones, renovaciones, facturación, cobranza, pagos y
+     liquidación de comisiones a distribuidores.
+  d) Enviar comunicaciones transaccionales y de servicio: verificación de correo, invitaciones,
+     acuses de recibo, cotizaciones, avisos de renovación, mora o suspensión, y novedades del servicio.
+  e) Atender solicitudes, peticiones, quejas, reclamos y requerimientos de soporte.
+  f) Gestionar prospectos y oportunidades comerciales de sus propios servicios, incluido el
+     seguimiento de las pruebas gratuitas.
+  g) Enviar información comercial, ofertas y novedades sobre sus productos, SOLO cuando el titular lo
+     haya autorizado expresamente; el titular puede revocar esta autorización en cualquier momento.
+  h) Garantizar la seguridad de la información, prevenir fraudes y abusos, y llevar registros de
+     auditoría.
+  i) Cumplir obligaciones legales, contables, tributarias y requerimientos de autoridades competentes.
+  j) Elaborar estadísticas e informes internos, preferiblemente con datos agregados o anonimizados.
+
+7. DERECHOS DE LOS TITULARES
+
+Como titular usted tiene derecho a:
+  a) Conocer, actualizar y rectificar sus datos personales.
+  b) Solicitar prueba de la autorización otorgada, salvo cuando la ley no la exija.
+  c) Ser informado, previa solicitud, sobre el uso que se ha dado a sus datos.
+  d) Presentar quejas ante la Superintendencia de Industria y Comercio (SIC) por infracciones a la ley,
+     una vez agotado el trámite de consulta o reclamo ante el responsable.
+  e) Revocar la autorización y/o solicitar la supresión de sus datos cuando no se respeten los
+     principios, derechos y garantías legales, siempre que no exista un deber legal o contractual de
+     conservarlos.
+  f) Acceder en forma gratuita a sus datos personales objeto de tratamiento.
+
+Estos derechos pueden ejercerse por el titular, sus causahabientes, su representante o apoderado, o
+por estipulación a favor de otro.
+
+8. AUTORIZACIÓN
+
+Herramientas Virtuales solicita la autorización del titular de manera previa, expresa e informada, por
+medios que permiten conservar prueba de ella (por ejemplo, la casilla de aceptación del registro o de
+los formularios web, que queda registrada con su fecha y origen). No se requiere autorización en los
+casos previstos en el artículo 10 de la Ley 1581 de 2012, entre ellos cuando el dato es de naturaleza
+pública o el tratamiento es necesario para ejecutar el contrato celebrado con el titular.
+
+9. ÁREA RESPONSABLE Y CANALES DE ATENCIÓN
+
+Área responsable: [COMPLETAR — p. ej. Oficial de Protección de Datos / Gerencia Administrativa]
+Correo electrónico: [COMPLETAR — privacidad@herramientasvirtuales.co]
+Dirección física: [COMPLETAR]
+Teléfono: [COMPLETAR]
+
+Los usuarios de las plataformas también pueden actualizar sus datos de cuenta directamente en la
+sección "Mi perfil".
+
+10. PROCEDIMIENTO PARA CONSULTAS Y RECLAMOS
+
+10.1 Requisitos de la solicitud. Indicar: nombre completo e identificación del titular; descripción de
+la solicitud; dirección o correo para la respuesta; y, si actúa un tercero, documento que acredite su
+representación.
+
+10.2 Consultas. Se responderán en un término máximo de diez (10) días hábiles contados desde su recibo.
+Si no es posible atenderlas en ese plazo, se informarán los motivos y la nueva fecha, que no superará
+cinco (5) días hábiles adicionales.
+
+10.3 Reclamos (corrección, actualización, supresión o incumplimiento). Si el reclamo está incompleto, se
+requerirá al interesado dentro de los cinco (5) días hábiles siguientes para que lo complete; si
+transcurren dos (2) meses sin que lo haga, se entenderá desistido. Una vez completo, se incluirá en la
+base de datos la leyenda "reclamo en trámite" y se atenderá en un término máximo de quince (15) días
+hábiles, prorrogables por ocho (8) días hábiles más, informando los motivos al interesado.
+
+10.4 Si la solicitud corresponde a datos de los que Herramientas Virtuales es ENCARGADO (sección 4.2),
+se trasladará al negocio responsable dentro de los cinco (5) días hábiles siguientes y se informará
+al titular.
+
+11. TRANSMISIÓN Y TRANSFERENCIA DE DATOS
+
+Para prestar sus servicios, Herramientas Virtuales se apoya en proveedores que actúan como encargados
+(por ejemplo, alojamiento y almacenamiento en la nube, envío de correo electrónico y, cuando aplique,
+pasarelas de pago). Algunos de estos proveedores pueden estar ubicados fuera de Colombia. En esos casos
+se suscriben acuerdos que les exigen tratar los datos solo para las finalidades autorizadas y con
+medidas de seguridad adecuadas, conforme a la Ley 1581 de 2012 y sus decretos reglamentarios.
+
+Los datos de los clientes de un negocio que usa la plataforma solo son accesibles para ese negocio.
+Los distribuidores únicamente acceden a información comercial de los negocios de su cartera (plan,
+estado de la suscripción, pagos y comisiones), no a los datos de los clientes de esos negocios.
+
+Herramientas Virtuales no vende ni alquila datos personales.
+
+12. MEDIDAS DE SEGURIDAD
+
+Herramientas Virtuales adopta medidas técnicas, humanas y administrativas razonables para proteger los
+datos contra pérdida, consulta, uso o acceso no autorizado o fraudulento, entre ellas:
+  - Cifrado de las comunicaciones (HTTPS/TLS).
+  - Contraseñas almacenadas con funciones de derivación robustas (no recuperables) y verificación en
+    dos pasos para cuentas administrativas.
+  - Separación lógica estricta de la información de cada negocio, con controles en la aplicación y en
+    la base de datos.
+  - Control de acceso por roles y principio de mínimo privilegio.
+  - El personal de soporte de Herramientas Virtuales solo accede a la información de un negocio con su
+    aprobación expresa, de forma temporal, en modo de solo lectura y con registro de auditoría.
+  - Registro de auditoría de las acciones relevantes y monitoreo de accesos.
+  - Copias de respaldo y procedimientos de recuperación.
+  - Minimización: por ejemplo, las direcciones IP de quienes diligencian formularios públicos se
+    conservan solo en forma seudonimizada.
+
+13. CONSERVACIÓN Y SUPRESIÓN
+
+Los datos se conservarán mientras sean necesarios para las finalidades descritas, mientras exista la
+relación con el titular o el negocio cliente, y durante los plazos exigidos por la ley (por ejemplo,
+los soportes contables y comerciales se conservan por el término previsto en la normativa mercantil y
+tributaria).
+
+Al terminar el contrato con un negocio, este podrá exportar su información durante [COMPLETAR — p. ej.
+30] días; vencido ese plazo, los datos se suprimirán o anonimizarán de forma segura, salvo los que deban
+conservarse por obligación legal.
+
+14. COOKIES Y TECNOLOGÍAS SIMILARES
+
+Las plataformas usan únicamente cookies y almacenamiento local estrictamente necesarios:
+  - Cookie de sesión: mantiene la sesión iniciada de forma segura.
+  - Protección contra falsificación de solicitudes (CSRF).
+  - Almacenamiento local del navegador para preferencias visuales (tema claro u oscuro, menús plegados).
+No se usan cookies publicitarias ni de rastreo de terceros en las plataformas. Si el sitio web
+institucional incorpora herramientas de analítica, se informará en esta sección y, cuando corresponda,
+se solicitará la autorización.
+
+15. DATOS DE NIÑOS, NIÑAS Y ADOLESCENTES
+
+Los servicios están dirigidos a empresas y personas mayores de edad. Herramientas Virtuales no recolecta
+de forma intencional datos de menores de edad. Si un negocio cliente trata datos de menores en la
+plataforma, es responsable de cumplir los requisitos legales aplicables, incluido el respeto del interés
+superior del menor.
+
+16. REGISTRO NACIONAL DE BASES DE DATOS
+
+Herramientas Virtuales registrará y mantendrá actualizadas sus bases de datos ante el Registro Nacional
+de Bases de Datos (RNBD) de la Superintendencia de Industria y Comercio, cuando le sea exigible.
+
+17. CAMBIOS A LA POLÍTICA Y VIGENCIA
+
+Cualquier cambio sustancial a esta política se comunicará oportunamente a los titulares a través del
+sitio web, las plataformas o el correo registrado, antes de su implementación. Esta política rige a
+partir del 3 de noviembre de 2026. Las bases de datos estarán vigentes mientras se mantengan las
+finalidades descritas.
+
+
+════════════════════════════════════════════════════════════════════
+AVISO DE PRIVACIDAD (versión corta, para formularios y registros)
+════════════════════════════════════════════════════════════════════
+
+Herramientas Virtuales CO S.A.S., NIT [COMPLETAR], con domicilio en [COMPLETAR], tratará sus datos
+personales para crear y administrar su cuenta, prestar y mejorar los servicios contratados, gestionar
+la relación comercial y de facturación, enviarle comunicaciones del servicio y, solo si usted lo
+autoriza, información comercial. Usted tiene derecho a conocer, actualizar, rectificar y suprimir sus
+datos y a revocar la autorización, escribiendo a [COMPLETAR — correo de privacidad]. Consulte la
+política completa en https://herramientasvirtuales.co/politica-de-datos-sistemapos
+
+
+════════════════════════════════════════════════════════════════════
+TEXTO SUGERIDO PARA FORMULARIOS DE LOS NEGOCIOS CLIENTES
+(cada negocio es responsable y debe ajustarlo con sus propios datos)
+════════════════════════════════════════════════════════════════════
+
+Autorizo a [NOMBRE DEL NEGOCIO], NIT [NIT], a tratar mis datos personales para atender mi solicitud y
+contactarme sobre sus productos y servicios, conforme a su política de tratamiento de datos
+([ENLACE A LA POLÍTICA DEL NEGOCIO]). Conozco mi derecho a conocer, actualizar, rectificar y suprimir
+mis datos y a revocar esta autorización escribiendo a [CORREO DEL NEGOCIO].

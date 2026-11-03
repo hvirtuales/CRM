@@ -34,7 +34,7 @@ class Commercial extends BaseConfig
     public bool $selfSignup = true;
 
     /** Enlace a términos y política de datos que el registrante debe aceptar. */
-    public string $termsUrl = 'https://herramientasvirtuales.co/politica-de-datos';
+    public string $termsUrl = 'https://herramientasvirtuales.co/politica-de-datos-sistemapos';
 
     public function __construct()
     {
